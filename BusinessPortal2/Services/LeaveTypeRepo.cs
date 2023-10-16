@@ -13,6 +13,13 @@ namespace BusinessPortal2.Services
             _context = context;
         }
 
+        public async Task<LeaveType> CreateLeave(LeaveType leaveType)
+        {
+            var register = await _context.leaveTypes.AddAsync(leaveType);
+            await _context.SaveChangesAsync();
+            return register.Entity;
+        }
+
         public async Task<LeaveType> DeleteLeave(int personalId)
         {
             var TtoDel = await _context.leaveTypes.FirstOrDefaultAsync(x => x.PersonalId == personalId);

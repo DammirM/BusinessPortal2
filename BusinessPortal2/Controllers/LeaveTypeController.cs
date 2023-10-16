@@ -21,69 +21,70 @@ namespace BusinessPortal2.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllLeaveTypes()
         {
-            try
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
+
+            var leaves = await _leaveTypeRepository.GetAll();
+            if (leaves.Any())
             {
-                var leaveTypes = await _leaveTypeRepository.GetAll();
-                return Ok(leaveTypes);
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                return Ok(response);
             }
-            catch (Exception ex)
-            {
-                return BadRequest("Error: " + ex.Message);
-            }
+
+            return NotFound(response);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{personalId}")]
         public async Task<IActionResult> GetLeaveTypeById(int id)
         {
-            try
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
+
+            var leave = await _leaveTypeRepository.GetById(id);
+            if (leave != null)
             {
-                var leaveType = await _leaveTypeRepository.GetById(id);
-                if (leaveType != null)
-                {
-                    return Ok(leaveType);
-                }
-                return NotFound();
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+
+                return Ok(response);
             }
-            catch (Exception ex)
-            {
-                return BadRequest("Error: " + ex.Message);
-            }
+
+            return NotFound(response);
         }
 
         [HttpDelete("{personalId}")]
         public async Task<IActionResult> DeleteLeaveType(int personalId)
         {
-            try
-            {
+
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
+
+            
                 var deletedLeaveType = await _leaveTypeRepository.DeleteLeave(personalId);
                 if (deletedLeaveType != null)
                 {
-                    return Ok(deletedLeaveType);
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.NoContent;
+                return Ok(deletedLeaveType);
                 }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Error: " + ex.Message);
-            }
+                
+                return NotFound("PersonalId Not Found");
+            
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{personalId}")]
         public async Task<IActionResult> UpdateLeaveType(int id, LeaveType leaveType)
         {
-            try
-            {
-                var updatedLeaveType = await _leaveTypeRepository.UpdateLeave(id, leaveType);
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
+
+
+            var updatedLeaveType = await _leaveTypeRepository.UpdateLeave(id, leaveType);
                 if (updatedLeaveType != null)
                 {
-                    return Ok(updatedLeaveType);
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.NoContent;
+                return Ok(updatedLeaveType);
                 }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Error: " + ex.Message);
-            }
+            return NotFound("PersonalId Not Found");
+
         }
     }
 }
