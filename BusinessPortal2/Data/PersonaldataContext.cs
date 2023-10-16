@@ -15,5 +15,6 @@ namespace BusinessPortal2.Data
         public DbSet<LeaveType> leaveTypes {get; set;}
 
 
+
     }
 }

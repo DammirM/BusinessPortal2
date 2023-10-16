@@ -1,5 +1,7 @@
+using BusinessPortal2.Data;
 using BusinessPortal2.Services;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessPortal2
 {
@@ -13,15 +15,21 @@ namespace BusinessPortal2
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IPersonalRepo, PersonalRepo>();
+            builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepo>();
 
             // Service for Mapping
             builder.Services.AddAutoMapper(typeof(MappingConfig));
 
             // Service for Validation
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+            builder.Services.AddDbContext<PersonaldataContext>(options => options
+            .UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
 
             var app = builder.Build();
 
