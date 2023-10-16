@@ -18,6 +18,11 @@ namespace BusinessPortal2.Services
             await context.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Personal>> GetAll()
+        {
+            return await context.personals.ToListAsync();
+        }
+
         public async Task<Personal> GetPersonalById(int id)
         {
             return await context.personals.FirstOrDefaultAsync(p => p.Id == id);

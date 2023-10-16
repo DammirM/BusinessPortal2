@@ -5,6 +5,7 @@ using BusinessPortal2.Models.DTO;
 using BusinessPortal2.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace BusinessPortal2.Controllers
 {
@@ -18,6 +19,24 @@ namespace BusinessPortal2.Controllers
         {
             this.repo = _repo;
             this.leaveRepo = _leaveRepo;
+        }
+
+        [HttpGet("GetAllPersonals")]
+        public async Task<IActionResult> GetAllPersonals()
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+
+            var allPersonals = await repo.GetAll();
+            if (allPersonals.Any())
+            {
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                // response.body here
+
+                return Ok(response);
+            }
+
+            return BadRequest(response);
         }
 
         [HttpPost("Register")]

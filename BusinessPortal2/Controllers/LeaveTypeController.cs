@@ -62,7 +62,7 @@ namespace BusinessPortal2.Controllers
             var updatedLeaveType = await _leaveTypeRepository.UpdateLeave(id, leaveType);
                 if (updatedLeaveType != null)
                 {
-                response.body= updatedLeaveType;
+                response.body = updatedLeaveType;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.NoContent;
                 return Ok(updatedLeaveType);
