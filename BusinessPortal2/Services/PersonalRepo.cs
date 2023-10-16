@@ -1,18 +1,26 @@
-﻿using BusinessPortal2.Models;
+﻿using BusinessPortal2.Data;
+using BusinessPortal2.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessPortal2.Services
 {
     public class PersonalRepo : IPersonalRepo
     {
-        //private readonly DataContext context;
-        //public PersonRepo(DataContext _context)
-        //{
-        //    this.context = _context;
-        //}
-        public Task Delete()
+        private readonly PersonaldataContext context;
+        public PersonalRepo(PersonaldataContext _context)
         {
-            throw new NotImplementedException();
+            this.context = _context;
+        }
+        public async Task Delete(Personal p)
+        {
+            context.personals.Remove(p);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<Personal> GetPersonalById(int id)
+        {
+            return await context.personals.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public Task Login()
@@ -20,9 +28,10 @@ namespace BusinessPortal2.Services
             throw new NotImplementedException();
         }
 
-        public Task<IActionResult> Register(Personal personal)
+        public async Task Register(Personal p)
         {
-            throw new NotImplementedException();
+            await context.personals.AddAsync(p);
+            await context.SaveChangesAsync();
         }
     }
 }

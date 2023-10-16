@@ -6,8 +6,9 @@ namespace BusinessPortal2.Services
 {
     public interface IPersonalRepo
     {
-        public Task<IActionResult> Register(Personal personal);
+        public Task Register(Personal personal);
         public Task Login();
-        public Task Delete();
+        public Task Delete(Personal personal);
+        public Task<Personal> GetPersonalById(int id);
     }
 }
