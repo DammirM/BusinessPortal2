@@ -39,10 +39,10 @@ namespace BusinessPortal2.Services
 
         public async Task<LeaveType> GetById(int id)
         {
-            var identi = await _context.leaveTypes.FirstOrDefaultAsync(x => x.PersonalId == id);
-            if (identi != null)
+            var identity = await _context.leaveTypes.FirstOrDefaultAsync(x => x.PersonalId == id);
+            if (identity != null)
             {
-                return identi;
+                return identity;
             }
             return null;
         }

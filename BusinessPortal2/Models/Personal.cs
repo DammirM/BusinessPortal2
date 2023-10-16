@@ -11,6 +11,6 @@ namespace BusinessPortal2.Models
         public string Password { get; set; }
         public bool  isAdmin { get; set; } = false;
 
-        public LeaveType leavetype { get; set; }
+        public LeaveType? leavetype { get; set; }
     }
 }

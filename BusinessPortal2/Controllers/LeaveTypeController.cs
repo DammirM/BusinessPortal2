@@ -26,6 +26,7 @@ namespace BusinessPortal2.Controllers
             var leaves = await _leaveTypeRepository.GetAll();
             if (leaves.Any())
             {
+                response.body= leaves;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 return Ok(response);
@@ -34,7 +35,7 @@ namespace BusinessPortal2.Controllers
             return NotFound(response);
         }
 
-        [HttpGet("{personalId}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetLeaveTypeById(int id)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
@@ -42,35 +43,17 @@ namespace BusinessPortal2.Controllers
             var leave = await _leaveTypeRepository.GetById(id);
             if (leave != null)
             {
+                response.body= leave;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
 
                 return Ok(response);
             }
 
-            return NotFound(response);
+            return NotFound("Personal Not sfjhdsfk");
         }
 
-        [HttpDelete("{personalId}")]
-        public async Task<IActionResult> DeleteLeaveType(int personalId)
-        {
-
-            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
-
-            
-                var deletedLeaveType = await _leaveTypeRepository.DeleteLeave(personalId);
-                if (deletedLeaveType != null)
-                {
-                response.isSuccess = true;
-                response.StatusCode = System.Net.HttpStatusCode.NoContent;
-                return Ok(deletedLeaveType);
-                }
-                
-                return NotFound("PersonalId Not Found");
-            
-        }
-
-        [HttpPut("{personalId}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateLeaveType(int id, LeaveType leaveType)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
@@ -79,6 +62,7 @@ namespace BusinessPortal2.Controllers
             var updatedLeaveType = await _leaveTypeRepository.UpdateLeave(id, leaveType);
                 if (updatedLeaveType != null)
                 {
+                response.body= updatedLeaveType;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.NoContent;
                 return Ok(updatedLeaveType);

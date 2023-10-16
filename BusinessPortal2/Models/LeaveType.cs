@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace BusinessPortal2.Models
 {
@@ -12,8 +13,8 @@ namespace BusinessPortal2.Models
         public int Vabb { get; set; }
         public int Sick { get; set; }
         public int Vacation { get; set; }
-
-        public Personal Personal { get; set; } // Add this navigation property
+        
+        public Personal? Personal { get; set; } // Add this navigation property
 
 
     }

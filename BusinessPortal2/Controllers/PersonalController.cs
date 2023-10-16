@@ -13,14 +13,16 @@ namespace BusinessPortal2.Controllers
     public class PersonalController : Controller
     {
         private readonly IPersonalRepo repo;
-        public PersonalController(IPersonalRepo _repo)
+        private readonly ILeaveTypeRepository leaveRepo;
+        public PersonalController(IPersonalRepo _repo, ILeaveTypeRepository _leaveRepo)
         {
             this.repo = _repo;
+            this.leaveRepo = _leaveRepo;
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> PersonalRegister([FromBody] RegisterPersonalDTO r_Personal_DTO, [FromServices] IMapper _mapper,
-            [FromServices] IValidator<RegisterPersonalDTO> _validate, ILeaveTypeRepository leaveTypeRepo)
+            [FromServices] IValidator<RegisterPersonalDTO> _validate)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
             var result = _validate.Validate(r_Personal_DTO);
@@ -46,7 +48,7 @@ namespace BusinessPortal2.Controllers
                 Vacation = 25
             };
 
-            await leaveTypeRepo.CreateLeave(leaveRype);
+            await leaveRepo.CreateLeave(leaveRype);
 
             response.isSuccess = true;
             response.StatusCode = System.Net.HttpStatusCode.Created;
