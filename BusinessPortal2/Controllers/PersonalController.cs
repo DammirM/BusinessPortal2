@@ -31,7 +31,7 @@ namespace BusinessPortal2.Controllers
             {
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
-                // response.body here
+                response.body = allPersonals;
 
                 return Ok(response);
             }
@@ -74,6 +74,12 @@ namespace BusinessPortal2.Controllers
 
             return Created("Created", response);
         }
+
+        //[HttpPut("Update")]
+        //public async Task<IActionResult> UpdatePersonal()
+        //{
+
+        //}
 
         [HttpDelete("Delete")]
         public async Task<IActionResult> PersonalDelete(int id)
