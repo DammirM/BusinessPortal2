@@ -64,6 +64,7 @@ namespace BusinessPortal2.Controllers
             var personToDelete = await repo.GetPersonalById(id);
             if(personToDelete != null)
             {
+                await leaveRepo.DeleteLeave(personToDelete.Id);
                 await repo.Delete(personToDelete);
 
                 response.isSuccess = true;
