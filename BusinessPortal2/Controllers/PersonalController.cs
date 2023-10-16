@@ -19,7 +19,7 @@ namespace BusinessPortal2.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterPersonalDTO r_Personal_DTO, [FromServices] IMapper _mapper,
+        public async Task<IActionResult> PersonalRegister([FromBody] RegisterPersonalDTO r_Personal_DTO, [FromServices] IMapper _mapper,
             [FromServices] IValidator<RegisterPersonalDTO> _validate)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
@@ -42,6 +42,30 @@ namespace BusinessPortal2.Controllers
             response.StatusCode = System.Net.HttpStatusCode.Created;
 
             return Created("Created", response);
+        }
+
+        public void CreateLeaveType()
+        {
+
+        }
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> PersonalDelete(int id)
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
+
+            var personToDelete = await repo.GetPersonalById(id);
+            if(personToDelete != null)
+            {
+                await repo.Delete(personToDelete);
+
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+
+                return Ok(response);
+            }
+
+            return NotFound();
         }
     }
 }
