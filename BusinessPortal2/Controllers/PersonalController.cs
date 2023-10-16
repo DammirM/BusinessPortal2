@@ -20,7 +20,7 @@ namespace BusinessPortal2.Controllers
 
         [HttpPost("Register")]
         public async Task<IActionResult> PersonalRegister([FromBody] RegisterPersonalDTO r_Personal_DTO, [FromServices] IMapper _mapper,
-            [FromServices] IValidator<RegisterPersonalDTO> _validate)
+            [FromServices] IValidator<RegisterPersonalDTO> _validate, ILeaveTypeRepository leaveTypeRepo)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
             var result = _validate.Validate(r_Personal_DTO);
@@ -36,17 +36,22 @@ namespace BusinessPortal2.Controllers
             }
 
             r_Personal_DTO.Password = BCrypt.Net.BCrypt.HashPassword(r_Personal_DTO.Password);
-            await repo.Register(_mapper.Map<Personal>(r_Personal_DTO));
+            var personal = await repo.Register(_mapper.Map<Personal>(r_Personal_DTO));
+
+            LeaveType leaveRype = new LeaveType()
+            {
+                PersonalId = personal.Id, 
+                Sick = 25, 
+                Vabb = 25, 
+                Vacation = 25
+            };
+
+            await leaveTypeRepo.CreateLeave(leaveRype);
 
             response.isSuccess = true;
             response.StatusCode = System.Net.HttpStatusCode.Created;
 
             return Created("Created", response);
-        }
-
-        public void CreateLeaveType()
-        {
-
         }
 
         [HttpDelete("Delete")]
