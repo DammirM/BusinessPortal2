@@ -13,7 +13,7 @@ namespace BusinessPortal2.Models
         public int Sick { get; set; }
         public int Vacation { get; set; }
 
-        // public Personal Personal { get; set; } // Add this navigation property
+        public Personal Personal { get; set; } // Add this navigation property
 
 
     }
