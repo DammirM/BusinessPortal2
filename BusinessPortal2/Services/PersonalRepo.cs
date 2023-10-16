@@ -28,10 +28,11 @@ namespace BusinessPortal2.Services
             throw new NotImplementedException();
         }
 
-        public async Task Register(Personal p)
+        public async Task<Personal> Register(Personal p)
         {
-            await context.personals.AddAsync(p);
+            var personal = await context.personals.AddAsync(p);
             await context.SaveChangesAsync();
+            return personal.Entity;
         }
     }
 }
