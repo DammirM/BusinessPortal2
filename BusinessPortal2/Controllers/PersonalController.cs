@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessPortal2.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
     public class PersonalController : Controller
     {
@@ -17,6 +18,7 @@ namespace BusinessPortal2.Controllers
             this.repo = _repo;
         }
 
+        [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterPersonalDTO r_Personal_DTO, [FromServices] IMapper _mapper,
             [FromServices] IValidator<RegisterPersonalDTO> _validate)
         {
