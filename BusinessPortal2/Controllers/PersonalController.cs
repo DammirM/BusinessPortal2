@@ -2,7 +2,7 @@
 using Azure;
 using Azure.Core;
 using BusinessPortal2.Models;
-using BusinessPortal2.Models.DTO;
+using BusinessPortal2.Models.DTO.PersonalDTO;
 using BusinessPortal2.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;

@@ -12,5 +12,7 @@ namespace BusinessPortal2.Models
         public bool  isAdmin { get; set; } = false;
 
         public LeaveType? leavetype { get; set; }
+
+        public ICollection<LeaveRequest> leaveRequests { get; set; } = new List<LeaveRequest>();
     }
 }

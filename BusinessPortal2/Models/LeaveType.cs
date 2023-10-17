@@ -17,5 +17,6 @@ namespace BusinessPortal2.Models
         public Personal? Personal { get; set; } // Add this navigation property
 
 
+
     }
 }

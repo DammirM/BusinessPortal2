@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessPortal2.Models;
 using BusinessPortal2.Models.DTO;
+using BusinessPortal2.Models.DTO.PersonalDTO;
 
 namespace BusinessPortal2
 {

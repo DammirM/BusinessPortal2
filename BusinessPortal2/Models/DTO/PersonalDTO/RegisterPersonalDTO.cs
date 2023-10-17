@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BusinessPortal2.Models.DTO
+namespace BusinessPortal2.Models.DTO.PersonalDTO
 {
     public class RegisterPersonalDTO
     {

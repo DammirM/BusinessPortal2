@@ -1,4 +1,4 @@
-﻿using BusinessPortal2.Models.DTO;
+﻿using BusinessPortal2.Models.DTO.PersonalDTO;
 using FluentValidation;
 
 namespace BusinessPortal2.Validation

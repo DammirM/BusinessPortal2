@@ -43,6 +43,7 @@ namespace BusinessPortal2.Services
         public async Task Update(Personal personal)
         {
             context.Update(personal);
+            await context.SaveChangesAsync();
         }
     }
 }
