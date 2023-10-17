@@ -101,6 +101,10 @@ namespace BusinessPortal2.Controllers
                 return BadRequest(response);
             }
 
+            pToUpdate.FullName = p_Update_DTO.FullName;
+            pToUpdate.Email = p_Update_DTO.Email;
+            pToUpdate.isAdmin = p_Update_DTO.isAdmin;
+
             await repo.Update(_mapper.Map<Personal>(p_Update_DTO));
 
             response.isSuccess = true;
