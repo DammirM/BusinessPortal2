@@ -9,6 +9,7 @@ namespace BusinessPortal2
         public MappingConfig()
         {
             CreateMap<Personal, RegisterPersonalDTO>().ReverseMap();
+            CreateMap<LeaveType, UpdateLeaveDTO>().ReverseMap();
             CreateMap<Personal, PersonalUpdateDTO>().ReverseMap();
         }
     }
