@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BusinessPortal2.Models;
 using BusinessPortal2.Services;
+using AutoMapper;
+using BusinessPortal2.Models.DTO;
 
 namespace BusinessPortal2.Controllers
 {
@@ -12,10 +14,12 @@ namespace BusinessPortal2.Controllers
     public class LeaveTypeController : ControllerBase
     {
         private readonly ILeaveTypeRepository _leaveTypeRepository;
+        private readonly IMapper _mapper;
 
-        public LeaveTypeController(ILeaveTypeRepository leaveTypeRepository)
+        public LeaveTypeController(ILeaveTypeRepository leaveTypeRepository, IMapper mapper)
         {
             _leaveTypeRepository = leaveTypeRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -54,21 +58,24 @@ namespace BusinessPortal2.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLeaveType(int id, LeaveType leaveType)
+        public async Task<IActionResult> UpdateLeaveType(int id, UpdateLeaveDTO updateLeaveDTO)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
 
+            var leaveTypeToUpdate = _mapper.Map<LeaveType>(updateLeaveDTO);
+            leaveTypeToUpdate.PersonalId = id;
 
-            var updatedLeaveType = await _leaveTypeRepository.UpdateLeave(id, leaveType);
-                if (updatedLeaveType != null)
-                {
+            var updatedLeaveType = await _leaveTypeRepository.UpdateLeave(id, leaveTypeToUpdate);
+
+            if (updatedLeaveType != null)
+            {
                 response.body = updatedLeaveType;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.NoContent;
-                return Ok(updatedLeaveType);
-                }
-            return NotFound("PersonalId Not Found");
+                return Ok(response);
+            }
 
+            return NotFound("PersonalId Not Found");
         }
     }
 }
