@@ -1,6 +1,8 @@
-﻿namespace BusinessPortal2.Models.DTO.LeaveRequestDTO
+﻿using BusinessPortal2.Models.DTO.PersonalDTO;
+
+namespace BusinessPortal2.Models.DTO.LeaveRequestDTO
 {
-    public class LeaveRequestReadAdmin
+    public class LeaveRequestReadAdminDTO
     {
         public int Id { get; set; }
         public DateTime StartDate { get; set; }
@@ -10,7 +12,7 @@
 
         public string LeaveTypeName { get; set; }
 
-        public Personal personal { get; set; }
+        public PersonalReadDTO personal { get; set; }
 
     }
 }

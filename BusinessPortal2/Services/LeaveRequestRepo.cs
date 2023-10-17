@@ -1,9 +1,10 @@
 ﻿using BusinessPortal2.Data;
 using BusinessPortal2.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessPortal2.Services
 {
-    public class LeaveRequestRepo : ILeaveRequest
+    public class LeaveRequestRepo : ILeaveRequestRepo
     {
         private readonly PersonaldataContext _context;
 
@@ -12,29 +13,24 @@ namespace BusinessPortal2.Services
             _context= context;
         }
 
-        public Task<LeaveRequest> CreateLeaveRequuest(LeaveRequest LeaveRequest)
+        public async Task<LeaveRequest> CreateLeaveRequuest(LeaveRequest LeaveRequest)
         {
-            throw new NotImplementedException();
+            var request = await _context.leaveRequests.AddAsync(LeaveRequest);
+            await _context.SaveChangesAsync();
+            return request.Entity;
         }
 
-        public Task<LeaveRequest> DeleteLeaveRequest(int personalId)
+        public async Task<IEnumerable<LeaveRequest>> GetAll(int id)
         {
-            throw new NotImplementedException();
+            return await _context.leaveRequests
+                .Where(leaveRequest => leaveRequest.PersonalId  == id)
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<LeaveRequest>> GetAll()
+        public async Task<LeaveRequest> GetById(int id, int personalId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<LeaveRequest> GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<LeaveRequest> UpdateLeaveRequest(int id, LeaveRequest LeaveRequest)
-        {
-            throw new NotImplementedException();
+            return await _context.leaveRequests.Where(leaveRequest => leaveRequest.Id == id)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

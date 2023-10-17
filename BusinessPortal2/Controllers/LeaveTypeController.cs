@@ -13,10 +13,10 @@ namespace BusinessPortal2.Controllers
     [ApiController]
     public class LeaveTypeController : ControllerBase
     {
-        private readonly ILeaveTypeRepository _leaveTypeRepository;
+        private readonly ILeaveTypeRepo _leaveTypeRepository;
         private readonly IMapper _mapper;
 
-        public LeaveTypeController(ILeaveTypeRepository leaveTypeRepository, IMapper mapper)
+        public LeaveTypeController(ILeaveTypeRepo leaveTypeRepository, IMapper mapper)
         {
             _leaveTypeRepository = leaveTypeRepository;
             _mapper = mapper;

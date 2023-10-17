@@ -2,7 +2,7 @@
 
 namespace BusinessPortal2.Services
 {
-    public interface ILeaveTypeRepository
+    public interface ILeaveTypeRepo
     {
 
         Task<LeaveType> CreateLeave(LeaveType leaveType);
@@ -12,7 +12,7 @@ namespace BusinessPortal2.Services
 
         Task<LeaveType> UpdateLeave(int id, LeaveType tr);
 
-        Task<LeaveType> DeleteLeave(int personalId);
+        Task DeleteLeave(int personalId);
 
     }
 }
