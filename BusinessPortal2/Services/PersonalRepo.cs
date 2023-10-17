@@ -39,5 +39,10 @@ namespace BusinessPortal2.Services
             await context.SaveChangesAsync();
             return personal.Entity;
         }
+
+        public async Task Update(Personal personal)
+        {
+            context.Update(personal);
+        }
     }
 }

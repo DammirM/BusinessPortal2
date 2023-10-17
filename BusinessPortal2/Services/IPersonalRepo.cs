@@ -11,5 +11,6 @@ namespace BusinessPortal2.Services
         public Task Delete(Personal personal);
         public Task<Personal> GetPersonalById(int id);
         public Task<IEnumerable<Personal>> GetAll();
+        public Task Update(Personal personal);
     }
 }

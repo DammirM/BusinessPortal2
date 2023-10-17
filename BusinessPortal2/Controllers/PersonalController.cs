@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Azure;
+using Azure.Core;
 using BusinessPortal2.Models;
 using BusinessPortal2.Models.DTO;
 using BusinessPortal2.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusinessPortal2.Controllers
 {
@@ -75,11 +77,36 @@ namespace BusinessPortal2.Controllers
             return Created("Created", response);
         }
 
-        //[HttpPut("Update")]
-        //public async Task<IActionResult> UpdatePersonal()
-        //{
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdatePersonal([FromBody] PersonalUpdateDTO p_Update_DTO, [FromServices] IMapper _mapper,
+            [FromServices] IValidator<PersonalUpdateDTO> _validate)
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
 
-        //}
+            var pToUpdate = await repo.GetPersonalById(p_Update_DTO.Id);
+
+            if (pToUpdate == null)
+            {
+                response.Errors.Add("ID not found.");
+                return NotFound(response);
+            }
+            var validationResult = await _validate.ValidateAsync(p_Update_DTO);
+
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    response.Errors.Add(error.ErrorMessage);
+                }
+                return BadRequest(response);
+            }
+
+            await repo.Update(_mapper.Map<Personal>(p_Update_DTO));
+
+            response.isSuccess = true;
+            response.StatusCode = System.Net.HttpStatusCode.OK;
+            return Ok(response);
+        }
 
         [HttpDelete("Delete")]
         public async Task<IActionResult> PersonalDelete(int id)
