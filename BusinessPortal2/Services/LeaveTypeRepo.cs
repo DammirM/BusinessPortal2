@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BusinessPortal2.Services
 {
-    public class LeaveTypeRepo : ILeaveTypeRepository
+    public class LeaveTypeRepo : ILeaveTypeRepo
     {
         private readonly PersonaldataContext _context;
 
@@ -18,18 +18,6 @@ namespace BusinessPortal2.Services
             var register = await _context.leaveTypes.AddAsync(leaveType);
             await _context.SaveChangesAsync();
             return register.Entity;
-        }
-
-        public async Task<LeaveType> DeleteLeave(int personalId)
-        {
-            var TtoDel = await _context.leaveTypes.FirstOrDefaultAsync(x => x.PersonalId == personalId);
-            if (TtoDel != null)
-            {
-                _context.leaveTypes.Remove(TtoDel);
-                await _context.SaveChangesAsync();
-                return TtoDel;
-            }
-            return null;
         }
 
         public async Task<IEnumerable<LeaveType>> GetAll()
@@ -59,6 +47,13 @@ namespace BusinessPortal2.Services
                 return identified;
             }
             return null;
+        }
+
+        public async Task DeleteLeave(int id)
+        {
+            var leaveTypeToDelete = await _context.leaveTypes
+                .FirstOrDefaultAsync(leaveType => leaveType.PersonalId == id);
+            _context.leaveTypes.Remove(leaveTypeToDelete);
         }
     }
 }

@@ -20,7 +20,9 @@ namespace BusinessPortal2
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IPersonalRepo, PersonalRepo>();
-            builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepo>();
+            builder.Services.AddScoped<ILeaveTypeRepo, LeaveTypeRepo>();
+            builder.Services.AddScoped<ILeaveRequestRepo, LeaveRequestRepo>();
+            builder.Services.AddScoped<LeaveRequestAdminRepo, LeaveRequestAdminRepo>();
 
             // Service for Mapping
             builder.Services.AddAutoMapper(typeof(MappingConfig));
@@ -29,7 +31,7 @@ namespace BusinessPortal2
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
             builder.Services.AddDbContext<PersonaldataContext>(options => options
-            .UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
+            .UseSqlServer(builder.Configuration.GetConnectionString("ConnectionFilip")));
 
             var app = builder.Build();
 

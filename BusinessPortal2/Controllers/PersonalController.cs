@@ -16,8 +16,8 @@ namespace BusinessPortal2.Controllers
     public class PersonalController : Controller
     {
         private readonly IPersonalRepo repo;
-        private readonly ILeaveTypeRepository leaveRepo;
-        public PersonalController(IPersonalRepo _repo, ILeaveTypeRepository _leaveRepo)
+        private readonly ILeaveTypeRepo leaveRepo;
+        public PersonalController(IPersonalRepo _repo, ILeaveTypeRepo _leaveRepo)
         {
             this.repo = _repo;
             this.leaveRepo = _leaveRepo;
