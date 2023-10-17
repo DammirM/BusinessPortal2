@@ -105,7 +105,7 @@ namespace BusinessPortal2.Controllers
             pToUpdate.Email = p_Update_DTO.Email;
             pToUpdate.isAdmin = p_Update_DTO.isAdmin;
 
-            await repo.Update(_mapper.Map<Personal>(p_Update_DTO));
+            await repo.Update(pToUpdate);
 
             response.isSuccess = true;
             response.StatusCode = System.Net.HttpStatusCode.OK;
