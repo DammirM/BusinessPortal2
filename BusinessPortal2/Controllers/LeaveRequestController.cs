@@ -20,7 +20,7 @@ namespace BusinessPortal2.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("getall-leaverequests/{personalId}")]
+        [HttpGet("getall/{personalId}")]
         public async Task<IActionResult> GetAll(int personalId)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
@@ -37,7 +37,7 @@ namespace BusinessPortal2.Controllers
             return BadRequest(response);
         }
 
-        [HttpGet("get-leaverequest/{personalId}/{leaveRequestId}")]
+        [HttpGet("get/{personalId}/{leaveRequestId}")]
         public async Task<IActionResult> GetLeaveRequestById(int leaveRequestId, int personalId)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
@@ -54,7 +54,7 @@ namespace BusinessPortal2.Controllers
             return BadRequest(response);
         }
 
-        [HttpPost("post-leaverequest")]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateLeaveRequest([FromBody] LeaveRequestCreateDTO LeaveRequestCreateDTO)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
