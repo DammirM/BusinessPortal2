@@ -6,17 +6,15 @@ namespace BusinessPortal2.Models
 {
     public class LeaveType
     {
-
         [Key]
-        [ForeignKey("Personal")]
+        public int Id { get; set; }
+        [Required]
+        public string LeaveName { get; set; }
+        [Required]
+        public int LeaveDays { get; set; }
+
         public int PersonalId { get; set; }
-        public int Vabb { get; set; }
-        public int Sick { get; set; }
-        public int Vacation { get; set; }
-        
-        public Personal? Personal { get; set; } // Add this navigation property
-
-
+        public Personal Personal { get; set; } // Add this navigation property
 
     }
 }
