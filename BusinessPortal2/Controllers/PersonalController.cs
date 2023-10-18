@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BusinessPortal2.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/personal")]
     [ApiController]
     public class PersonalController : Controller
     {
@@ -23,7 +23,7 @@ namespace BusinessPortal2.Controllers
             this.leaveRepo = _leaveRepo;
         }
 
-        [HttpGet("GetAllPersonals")]
+        [HttpGet("getall")]
         public async Task<IActionResult> GetAllPersonals()
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
@@ -41,7 +41,7 @@ namespace BusinessPortal2.Controllers
             return BadRequest(response);
         }
 
-        [HttpPost("Register")]
+        [HttpPost("create")]
         public async Task<IActionResult> PersonalRegister([FromBody] RegisterPersonalDTO r_Personal_DTO, [FromServices] IMapper _mapper,
             [FromServices] IValidator<RegisterPersonalDTO> _validate)
         {
@@ -78,7 +78,7 @@ namespace BusinessPortal2.Controllers
             return Created("Created", response);
         }
 
-        [HttpPut("Update")]
+        [HttpPut("create")]
         public async Task<IActionResult> UpdatePersonal([FromBody] PersonalUpdateDTO p_Update_DTO, [FromServices] IMapper _mapper,
             [FromServices] IValidator<PersonalUpdateDTO> _validate)
         {
@@ -113,12 +113,12 @@ namespace BusinessPortal2.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("Delete")]
-        public async Task<IActionResult> PersonalDelete(int id)
+        [HttpDelete("delete/{personalId}")]
+        public async Task<IActionResult> PersonalDelete(int personalId)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
 
-            var personToDelete = await repo.GetPersonalById(id);
+            var personToDelete = await repo.GetPersonalById(personalId);
             if(personToDelete != null)
             {
                 await leaveRepo.DeleteLeave(personToDelete.Id);
