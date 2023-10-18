@@ -6,6 +6,7 @@ using BusinessPortal2.Models;
 using BusinessPortal2.Services;
 using AutoMapper;
 using BusinessPortal2.Models.DTO;
+using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 
 namespace BusinessPortal2.Controllers
 {
@@ -22,7 +23,7 @@ namespace BusinessPortal2.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
         public async Task<IActionResult> GetAllLeaveTypes()
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
@@ -36,46 +37,40 @@ namespace BusinessPortal2.Controllers
                 return Ok(response);
             }
 
-            return NotFound(response);
+            return BadRequest(response);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetLeaveTypeById(int id)
+        [HttpGet("get/{leaveTypeId}")]
+        public async Task<IActionResult> GetLeaveTypeById(int leaveTypeId)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
 
-            var leave = await _leaveTypeRepository.GetById(id);
+            var leave = await _leaveTypeRepository.GetById(leaveTypeId);
             if (leave != null)
             {
                 response.body= leave;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
-
                 return Ok(response);
             }
 
-            return NotFound("Personal Not sfjhdsfk");
+            return BadRequest("Personal Not sfjhdsfk");
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLeaveType(int id, UpdateLeaveDTO updateLeaveDTO)
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateLeaveType(UpdateLeaveDTO leaveTypeUpdateDTO)
         {
-            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
 
-            var leaveTypeToUpdate = _mapper.Map<LeaveType>(updateLeaveDTO);
-            leaveTypeToUpdate.PersonalId = id;
-
-            var updatedLeaveType = await _leaveTypeRepository.UpdateLeave(id, leaveTypeToUpdate);
-
-            if (updatedLeaveType != null)
+            if (leaveTypeUpdateDTO != null)
             {
-                response.body = updatedLeaveType;
+                await _leaveTypeRepository.UpdateLeave(_mapper.Map<LeaveType>(leaveTypeUpdateDTO));
+                response.body = leaveTypeUpdateDTO;
                 response.isSuccess = true;
-                response.StatusCode = System.Net.HttpStatusCode.NoContent;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
                 return Ok(response);
             }
-
-            return NotFound("PersonalId Not Found");
+            return BadRequest(response);
         }
     }
 }

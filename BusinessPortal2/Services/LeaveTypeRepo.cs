@@ -35,7 +35,7 @@ namespace BusinessPortal2.Services
             return null;
         }
 
-        public async Task<LeaveType> UpdateLeave(int id, LeaveType tr)
+        public async Task<LeaveType> UpdateLeave(LeaveType tr)
         {
             var identified = await _context.leaveTypes.FirstOrDefaultAsync(e => e.PersonalId == tr.PersonalId);
             if (identified != null)
