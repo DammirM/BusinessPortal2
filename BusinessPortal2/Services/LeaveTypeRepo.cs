@@ -13,47 +13,55 @@ namespace BusinessPortal2.Services
             _context = context;
         }
 
-        public async Task<LeaveType> Create(LeaveType leaveType)
+        public async Task<LeaveType> CreateLeaveType(LeaveType leaveType)
         {
-            var register = await _context.leaveTypes.AddAsync(leaveType);
-            await _context.SaveChangesAsync();
-            return register.Entity;
-        }
-
-        public async Task<IEnumerable<LeaveType>> GetAll()
-        {
-            return await _context.leaveTypes.ToListAsync();
-        }
-
-        public async Task<LeaveType> GetById(int id)
-        {
-            var identity = await _context.leaveTypes.FirstOrDefaultAsync(x => x.PersonalId == id);
-            if (identity != null)
+            if (leaveType != null)
             {
-                return identity;
-            }
-            return null;
-        }
-
-        public async Task<LeaveType> UpdateLeave(LeaveType tr)
-        {
-            var identified = await _context.leaveTypes.FirstOrDefaultAsync(e => e.PersonalId == tr.PersonalId);
-            if (identified != null)
-            {
-                identified.Sick = tr.Sick;
-                identified.Vacation = tr.Vacation;
-                identified.Vabb = tr.Vabb;
+                var register = await _context.leaveTypes.AddAsync(leaveType);
                 await _context.SaveChangesAsync();
-                return identified;
+                return register.Entity;
             }
             return null;
         }
 
-        public async Task Delete(int id)
+        public async Task<IEnumerable<LeaveType>> GetAllLeaveType()
+        {
+            var leaveTypeAll = await _context.leaveTypes.ToListAsync();
+
+            return leaveTypeAll;
+        }
+
+        public async Task<LeaveType> GetLeaveTypeById(int leaveTypeId)
+        {
+            var leaveTypeById = await _context.leaveTypes.FirstOrDefaultAsync(leaveType => leaveType.Id == leaveTypeId);
+            
+            return leaveTypeById;
+        }
+
+        public async Task<LeaveType> UpdateLeaveType(LeaveType leaveType)
+        {
+            if (leaveType != null)
+            {
+                _context.leaveTypes.Update(leaveType);
+                await _context.SaveChangesAsync();
+                return leaveType;
+            }
+            return null;
+        }
+
+        public async Task<bool> DeleteLeaveType(int leaveTypeId)
         {
             var leaveTypeToDelete = await _context.leaveTypes
-                .FirstOrDefaultAsync(leaveType => leaveType.PersonalId == id);
-            _context.leaveTypes.Remove(leaveTypeToDelete);
+                .FirstOrDefaultAsync(leaveType => leaveType.Id == leaveTypeId);
+            
+            if (leaveTypeToDelete != null)
+            {
+                _context.leaveTypes.Remove(leaveTypeToDelete);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
         }
     }
 }

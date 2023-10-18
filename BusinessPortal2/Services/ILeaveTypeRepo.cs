@@ -5,13 +5,13 @@ namespace BusinessPortal2.Services
 {
     public interface ILeaveTypeRepo
     {
-        Task<LeaveType> Create(LeaveTypeCreateDTO leaveTypeCreateDTO);
-        Task<IEnumerable<LeaveType>> GetAll();
+        Task<LeaveType> CreateLeaveType(LeaveType leaveType);
+        Task<IEnumerable<LeaveType>> GetAllLeaveType();
 
-        Task<LeaveType> GetById(int leaveTypeId);
+        Task<LeaveType> GetLeaveTypeById(int leaveTypeId);
 
-        Task<LeaveType> Update(LeaveTypeUpdateDTO leaveTypeUpdateDTO);
+        Task<LeaveType> UpdateLeaveType(LeaveType leaveType);
 
-        Task Delete(int leaveTypeId);
+        Task<bool> DeleteLeaveType(int leaveTypeId);
     }
 }
