@@ -9,10 +9,10 @@
         public DateTime DateRequest { get; set; }
         public string ApprovalState { get; set; }
 
-        public string LeaveTypeName { get; set; }
-
-        public Personal personal { get; set; }
+        public int LeaveTypeId { get; set; }
+        public LeaveType? leavetype { get; set; }
         public int PersonalId { get; set; }
+        public Personal personal { get; set; }
 
 
     }
