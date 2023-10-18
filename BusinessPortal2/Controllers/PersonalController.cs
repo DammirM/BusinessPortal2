@@ -71,6 +71,7 @@ namespace BusinessPortal2.Controllers
 
             await leaveRepo.CreateLeave(leaveRype);
 
+            response.body = r_Personal_DTO;
             response.isSuccess = true;
             response.StatusCode = System.Net.HttpStatusCode.Created;
 
