@@ -17,7 +17,7 @@ namespace BusinessPortal2.Services
         {
             if (leaveType != null)
             {
-                var register = await _context.leaveTypes.AddAsync(leaveType);
+                var register = await _context.LeaveType.AddAsync(leaveType);
                 await _context.SaveChangesAsync();
                 return register.Entity;
             }
@@ -26,15 +26,15 @@ namespace BusinessPortal2.Services
 
         public async Task<IEnumerable<LeaveType>> GetAllLeaveType()
         {
-            var leaveTypeAll = await _context.leaveTypes.ToListAsync();
+            var leaveTypeAll = await _context.LeaveType.Include(leaveType => leaveType.leaveRequests).ToListAsync();
 
             return leaveTypeAll;
         }
 
         public async Task<LeaveType> GetLeaveTypeById(int leaveTypeId)
         {
-            var leaveTypeById = await _context.leaveTypes.FirstOrDefaultAsync(leaveType => leaveType.Id == leaveTypeId);
-            
+            var leaveTypeById = await _context.LeaveType.FirstOrDefaultAsync(leaveType => leaveType.Id == leaveTypeId);
+
             return leaveTypeById;
         }
 
@@ -42,7 +42,7 @@ namespace BusinessPortal2.Services
         {
             if (leaveType != null)
             {
-                _context.leaveTypes.Update(leaveType);
+                _context.LeaveType.Update(leaveType);
                 await _context.SaveChangesAsync();
                 return leaveType;
             }
@@ -51,12 +51,12 @@ namespace BusinessPortal2.Services
 
         public async Task<bool> DeleteLeaveType(int leaveTypeId)
         {
-            var leaveTypeToDelete = await _context.leaveTypes
+            var leaveTypeToDelete = await _context.LeaveType
                 .FirstOrDefaultAsync(leaveType => leaveType.Id == leaveTypeId);
-            
+
             if (leaveTypeToDelete != null)
             {
-                _context.leaveTypes.Remove(leaveTypeToDelete);
+                _context.LeaveType.Remove(leaveTypeToDelete);
                 await _context.SaveChangesAsync();
                 return true;
             }

@@ -29,6 +29,7 @@ namespace BusinessPortal2.Services
         {
             return await _context.leaveRequests
                 .Include(leaveRequest => leaveRequest.personal)
+                .Include(leaveRequest => leaveRequest.leaveType)
                 .ToListAsync();
         }
 

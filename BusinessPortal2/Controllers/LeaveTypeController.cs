@@ -31,7 +31,7 @@ namespace BusinessPortal2.Controllers
             var leaveTypeAll = await _leaveTypeRepository.GetAllLeaveType();
             if (leaveTypeAll.Any())
             {
-                response.body= _mapper.Map<LeaveTypeReadDTO>(leaveTypeAll);
+                response.body = _mapper.Map<IEnumerable<LeaveTypeReadDTO>>(leaveTypeAll);
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 return Ok(response);
@@ -48,7 +48,7 @@ namespace BusinessPortal2.Controllers
             var leaveTypeById = await _leaveTypeRepository.GetLeaveTypeById(leaveTypeId);
             if (leaveTypeById != null)
             {
-                response.body= _mapper.Map<LeaveTypeReadDTO>(leaveTypeById);
+                response.body = _mapper.Map<LeaveTypeReadDTO>(leaveTypeById);
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 return Ok(response);
@@ -68,7 +68,7 @@ namespace BusinessPortal2.Controllers
                 response.body = leaveTypeCreateDTO;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
-                return Ok(response);
+                return Created("Created", response);
             }
             response.Errors.Add("LeaveTypeCreateDTO is null");
             return BadRequest(response);

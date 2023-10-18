@@ -23,9 +23,9 @@ namespace BusinessPortal2.Services
             return await context.personals.ToListAsync();
         }
 
-        public async Task<Personal> GetPersonalById(int id)
+        public async Task<Personal> GetPersonalById(int personalId)
         {
-            return await context.personals.FirstOrDefaultAsync(p => p.Id == id);
+            return await context.personals.FirstOrDefaultAsync(personal => personal.Id == personalId);
         }
 
         public Task Login()

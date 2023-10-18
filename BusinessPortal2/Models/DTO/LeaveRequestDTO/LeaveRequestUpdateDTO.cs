@@ -7,7 +7,7 @@
         public DateTime EndDate { get; set; }
         public DateTime DateRequest { get; set; }
         public string ApprovalState { get; set; }
-        public string LeaveTypeName { get; set; }
         public int PersonalId { get; set; }
+        public int LeaveTypeId { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace BusinessPortal2.Services
         public Task<Personal> RegisterPersonal(Personal personal);
         public Task Login();
         public Task DeletePersonal(Personal personal);
-        public Task<Personal> GetPersonalById(int id);
+        public Task<Personal> GetPersonalById(int personalId);
         public Task<IEnumerable<Personal>> GetAllPersonal();
         public Task UpdatePersonal(Personal personal);
     }

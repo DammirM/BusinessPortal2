@@ -1,4 +1,5 @@
-﻿using BusinessPortal2.Models.DTO.PersonalDTO;
+﻿using BusinessPortal2.Models.DTO.LeaveTypeDTO;
+using BusinessPortal2.Models.DTO.PersonalDTO;
 
 namespace BusinessPortal2.Models.DTO.LeaveRequestDTO
 {
@@ -10,8 +11,7 @@ namespace BusinessPortal2.Models.DTO.LeaveRequestDTO
         public DateTime DateRequest { get; set; }
         public string ApprovalState { get; set; }
 
-        public string LeaveTypeName { get; set; }
-
+        public LeaveTypeSimpleReadDTO leaveType { get; set; }
         public PersonalReadDTO personal { get; set; }
 
     }
