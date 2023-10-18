@@ -28,7 +28,7 @@ namespace BusinessPortal2.Controllers
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
 
-            var allPersonals = await repo.GetAll();
+            var allPersonals = await repo.GetAllPersonal();
             if (allPersonals.Any())
             {
                 response.isSuccess = true;
@@ -59,7 +59,7 @@ namespace BusinessPortal2.Controllers
             }
 
             r_Personal_DTO.Password = BCrypt.Net.BCrypt.HashPassword(r_Personal_DTO.Password);
-            await repo.Register(_mapper.Map<Personal>(r_Personal_DTO));
+            await repo.RegisterPersonal(_mapper.Map<Personal>(r_Personal_DTO));
 
             response.body = r_Personal_DTO;
             response.isSuccess = true;
@@ -96,7 +96,7 @@ namespace BusinessPortal2.Controllers
             pToUpdate.Email = p_Update_DTO.Email;
             pToUpdate.isAdmin = p_Update_DTO.isAdmin;
 
-            await repo.Update(pToUpdate);
+            await repo.UpdatePersonal(pToUpdate);
 
             response.isSuccess = true;
             response.StatusCode = System.Net.HttpStatusCode.OK;
@@ -111,8 +111,8 @@ namespace BusinessPortal2.Controllers
             var personToDelete = await repo.GetPersonalById(personalId);
             if(personToDelete != null)
             {
-                await leaveRepo.Delete(personToDelete.Id);
-                await repo.Delete(personToDelete);
+                await leaveRepo.DeleteLeaveType(personToDelete.Id);
+                await repo.DeletePersonal(personToDelete);
 
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;

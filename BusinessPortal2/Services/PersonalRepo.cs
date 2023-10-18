@@ -12,13 +12,13 @@ namespace BusinessPortal2.Services
         {
             this.context = _context;
         }
-        public async Task Delete(Personal p)
+        public async Task DeletePersonal(Personal p)
         {
             context.personals.Remove(p);
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Personal>> GetAll()
+        public async Task<IEnumerable<Personal>> GetAllPersonal()
         {
             return await context.personals.ToListAsync();
         }
@@ -33,14 +33,14 @@ namespace BusinessPortal2.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Personal> Register(Personal p)
+        public async Task<Personal> RegisterPersonal(Personal p)
         {
             var personal = await context.personals.AddAsync(p);
             await context.SaveChangesAsync();
             return personal.Entity;
         }
 
-        public async Task Update(Personal personal)
+        public async Task UpdatePersonal(Personal personal)
         {
             context.Update(personal);
             await context.SaveChangesAsync();
