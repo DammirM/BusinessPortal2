@@ -13,7 +13,7 @@ namespace BusinessPortal2.Services
             _context= context;
         }
 
-        public async Task<LeaveRequest> CreateLeaveRequuest(LeaveRequest LeaveRequest)
+        public async Task<LeaveRequest> Create(LeaveRequest LeaveRequest)
         {
             var request = await _context.leaveRequests.AddAsync(LeaveRequest);
             await _context.SaveChangesAsync();

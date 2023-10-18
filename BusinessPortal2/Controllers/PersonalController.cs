@@ -59,17 +59,7 @@ namespace BusinessPortal2.Controllers
             }
 
             r_Personal_DTO.Password = BCrypt.Net.BCrypt.HashPassword(r_Personal_DTO.Password);
-            var personal = await repo.Register(_mapper.Map<Personal>(r_Personal_DTO));
-
-            LeaveType leaveRype = new LeaveType()
-            {
-                PersonalId = personal.Id, 
-                Sick = 25, 
-                Vabb = 25, 
-                Vacation = 25
-            };
-
-            await leaveRepo.CreateLeave(leaveRype);
+            await repo.Register(_mapper.Map<Personal>(r_Personal_DTO));
 
             response.body = r_Personal_DTO;
             response.isSuccess = true;
@@ -121,7 +111,7 @@ namespace BusinessPortal2.Controllers
             var personToDelete = await repo.GetPersonalById(personalId);
             if(personToDelete != null)
             {
-                await leaveRepo.DeleteLeave(personToDelete.Id);
+                await leaveRepo.Delete(personToDelete.Id);
                 await repo.Delete(personToDelete);
 
                 response.isSuccess = true;

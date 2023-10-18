@@ -13,7 +13,7 @@ namespace BusinessPortal2.Services
             _context = context;
         }
 
-        public async Task<LeaveType> CreateLeave(LeaveType leaveType)
+        public async Task<LeaveType> Create(LeaveType leaveType)
         {
             var register = await _context.leaveTypes.AddAsync(leaveType);
             await _context.SaveChangesAsync();
@@ -49,7 +49,7 @@ namespace BusinessPortal2.Services
             return null;
         }
 
-        public async Task DeleteLeave(int id)
+        public async Task Delete(int id)
         {
             var leaveTypeToDelete = await _context.leaveTypes
                 .FirstOrDefaultAsync(leaveType => leaveType.PersonalId == id);

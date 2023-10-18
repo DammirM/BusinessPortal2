@@ -61,7 +61,7 @@ namespace BusinessPortal2.Controllers
 
             if(LeaveRequestCreateDTO != null)
             {
-                var newLeaveTypeRequest = await _leaveRequestRepo.CreateLeaveRequuest(_mapper.Map<LeaveRequest>(LeaveRequestCreateDTO));
+                var newLeaveTypeRequest = await _leaveRequestRepo.Create(_mapper.Map<LeaveRequest>(LeaveRequestCreateDTO));
                 response.body = newLeaveTypeRequest;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.Created;

@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using BusinessPortal2.Models;
 using BusinessPortal2.Services;
 using AutoMapper;
-using BusinessPortal2.Models.DTO;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
+using BusinessPortal2.Models.DTO.LeaveTypeDTO;
 
 namespace BusinessPortal2.Controllers
 {
@@ -58,7 +58,7 @@ namespace BusinessPortal2.Controllers
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateLeaveType(UpdateLeaveDTO leaveTypeUpdateDTO)
+        public async Task<IActionResult> UpdateLeaveType(LeaveTypeUpdateDTO leaveTypeUpdateDTO)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
 
