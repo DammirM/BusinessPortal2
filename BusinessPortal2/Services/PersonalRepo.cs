@@ -1,7 +1,6 @@
 ﻿using BusinessPortal2.Data;
 using BusinessPortal2.Models;
 using BusinessPortal2.Models.DTO.PersonalDTO;
-using BusinessPortal2.Models.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
