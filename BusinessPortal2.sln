@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessPortal2", "BusinessPortal2\BusinessPortal2.csproj", "{EF7C33B4-6FE4-4841-8EC4-FD1C0EB24CCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessPortal2", "BusinessPortal2\BusinessPortal2.csproj", "{EF7C33B4-6FE4-4841-8EC4-FD1C0EB24CCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationBusinessPortal2", "WebApplicationBusinessPortal2\WebApplicationBusinessPortal2.csproj", "{8A2D66C2-27E8-448B-A8EC-3DE99E2075F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{EF7C33B4-6FE4-4841-8EC4-FD1C0EB24CCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF7C33B4-6FE4-4841-8EC4-FD1C0EB24CCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF7C33B4-6FE4-4841-8EC4-FD1C0EB24CCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A2D66C2-27E8-448B-A8EC-3DE99E2075F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A2D66C2-27E8-448B-A8EC-3DE99E2075F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A2D66C2-27E8-448B-A8EC-3DE99E2075F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A2D66C2-27E8-448B-A8EC-3DE99E2075F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

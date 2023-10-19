@@ -29,7 +29,7 @@ namespace BusinessPortal2.Controllers
             var allPersonals = await repo.GetAllPersonal();
             if (allPersonals.Any())
             {
-                response.body = allPersonals;
+                response.Result = allPersonals;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 return Ok(response);
@@ -47,7 +47,7 @@ namespace BusinessPortal2.Controllers
             var personalById = await repo.GetPersonalById(personalId);
             if(personalById != null)
             {
-                response.body = personalById;
+                response.Result = personalById;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 return Ok(response);
@@ -77,7 +77,7 @@ namespace BusinessPortal2.Controllers
             r_Personal_DTO.Password = BCrypt.Net.BCrypt.HashPassword(r_Personal_DTO.Password);
             await repo.RegisterPersonal(_mapper.Map<Personal>(r_Personal_DTO));
 
-            response.body = r_Personal_DTO;
+            response.Result = r_Personal_DTO;
             response.isSuccess = true;
             response.StatusCode = System.Net.HttpStatusCode.Created;
 
@@ -110,7 +110,7 @@ namespace BusinessPortal2.Controllers
 
             await repo.UpdatePersonal(_mapper.Map<Personal>(personalToUpdate));
 
-            response.body = p_Update_DTO;
+            response.Result = p_Update_DTO;
             response.isSuccess = true;
             response.StatusCode = System.Net.HttpStatusCode.OK;
             return Ok(response);
@@ -126,7 +126,7 @@ namespace BusinessPortal2.Controllers
             {
                 await repo.DeletePersonal(personToDelete);
 
-                response.body = personToDelete;
+                response.Result = personToDelete;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
 

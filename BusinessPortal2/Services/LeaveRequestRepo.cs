@@ -24,13 +24,30 @@ namespace BusinessPortal2.Services
         {
             return await _context.leaveRequests
                 .Where(leaveRequest => leaveRequest.PersonalId  == id)
+                .Include(leaveRequest =>leaveRequest.leaveType)
                 .ToListAsync();
         }
 
         public async Task<LeaveRequest> GetLeaveRequestById(int id, int personalId)
         {
-            return await _context.leaveRequests.Where(leaveRequest => leaveRequest.Id == id)
-                .FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.leaveRequests
+                .Where(leaveRequest => leaveRequest.Id == personalId)
+                .Include(leaveRequest => leaveRequest.leaveType)
+                .FirstOrDefaultAsync(leaveRequest => leaveRequest.Id == id);
+        }
+
+        public async Task<bool> DeleteLeaveRequest(int id, int personalId)
+        {
+            var requestToDelete = await _context.leaveRequests
+                .Where(leaveRequest => leaveRequest.PersonalId == personalId)
+                .FirstOrDefaultAsync(leaveRequest => leaveRequest.Id == id);
+            if (requestToDelete != null)
+            {
+                _context.Remove(requestToDelete);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

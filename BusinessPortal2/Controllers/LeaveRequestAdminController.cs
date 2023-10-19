@@ -31,7 +31,7 @@ namespace BusinessPortal2.Controllers
             {
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
-                response.body = _mapper.Map<IEnumerable<LeaveRequestReadAdminDTO>>(allRequests);
+                response.Result = _mapper.Map<IEnumerable<LeaveRequestReadAdminDTO>>(allRequests);
 
                 return Ok(response);
             }
@@ -48,7 +48,7 @@ namespace BusinessPortal2.Controllers
             {
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
-                response.body = _mapper.Map<IEnumerable<LeaveRequestReadAdminDTO>>(allLeaveRequests);
+                response.Result = _mapper.Map<IEnumerable<LeaveRequestReadAdminDTO>>(allLeaveRequests);
 
                 return Ok(response);
             }
@@ -63,7 +63,7 @@ namespace BusinessPortal2.Controllers
             var leaveRequestSingle = await _leaveRequestAdminRepo.GetById(leaveRequestId);
             if (leaveRequestSingle != null)
             {
-                response.body = _mapper.Map<LeaveRequestReadAdminDTO>(leaveRequestSingle);
+                response.Result = _mapper.Map<LeaveRequestReadAdminDTO>(leaveRequestSingle);
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
 
@@ -80,7 +80,7 @@ namespace BusinessPortal2.Controllers
             if (leaveRequestCreateDTO != null)
             {
                 await _leaveRequestAdminRepo.CreateLeaveRequest(_mapper.Map<LeaveRequest>(leaveRequestCreateDTO));
-                response.body = leaveRequestCreateDTO;
+                response.Result = leaveRequestCreateDTO;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.Created;
 
@@ -97,7 +97,7 @@ namespace BusinessPortal2.Controllers
             if (leaveRequestUpdateDTO != null)
             {
                 await _leaveRequestAdminRepo.Update(_mapper.Map<LeaveRequest>(leaveRequestUpdateDTO));
-                response.body = leaveRequestUpdateDTO;
+                response.Result = leaveRequestUpdateDTO;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
 
