@@ -16,11 +16,9 @@ namespace BusinessPortal2.Controllers
     public class PersonalController : Controller
     {
         private readonly IPersonalRepo repo;
-        private readonly ILeaveTypeRepo leaveRepo;
-        public PersonalController(IPersonalRepo _repo, ILeaveTypeRepo _leaveRepo)
+        public PersonalController(IPersonalRepo _repo)
         {
             this.repo = _repo;
-            this.leaveRepo = _leaveRepo;
         }
 
         [HttpGet("getall")]
@@ -28,17 +26,35 @@ namespace BusinessPortal2.Controllers
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
 
-            var allPersonals = await repo.GetAll();
+            var allPersonals = await repo.GetAllPersonal();
             if (allPersonals.Any())
             {
+                response.body = allPersonals;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
-                response.body = allPersonals;
-
                 return Ok(response);
             }
 
-            return BadRequest(response);
+            response.Errors.Add("No personals found.");
+            return NotFound(response);
+        }
+
+        [HttpGet("get/{personalId}")]
+        public async Task<IActionResult> GetPersonalById(int personalId)
+        {
+            ApiResponse response= new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+
+            var personalById = await repo.GetPersonalById(personalId);
+            if(personalById != null)
+            {
+                response.body = personalById;
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                return Ok(response);
+            }
+
+            response.Errors.Add($"Personal with id=[{personalId}] could not be found");
+            return NotFound(response);
         }
 
         [HttpPost("create")]
@@ -59,17 +75,7 @@ namespace BusinessPortal2.Controllers
             }
 
             r_Personal_DTO.Password = BCrypt.Net.BCrypt.HashPassword(r_Personal_DTO.Password);
-            var personal = await repo.Register(_mapper.Map<Personal>(r_Personal_DTO));
-
-            LeaveType leaveRype = new LeaveType()
-            {
-                PersonalId = personal.Id, 
-                Sick = 25, 
-                Vabb = 25, 
-                Vacation = 25
-            };
-
-            await leaveRepo.CreateLeave(leaveRype);
+            await repo.RegisterPersonal(_mapper.Map<Personal>(r_Personal_DTO));
 
             response.body = r_Personal_DTO;
             response.isSuccess = true;
@@ -78,15 +84,15 @@ namespace BusinessPortal2.Controllers
             return Created("Created", response);
         }
 
-        [HttpPut("create")]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdatePersonal([FromBody] PersonalUpdateDTO p_Update_DTO, [FromServices] IMapper _mapper,
             [FromServices] IValidator<PersonalUpdateDTO> _validate)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
 
-            var pToUpdate = await repo.GetPersonalById(p_Update_DTO.Id);
+            var personalToUpdate = await repo.GetPersonalById(p_Update_DTO.Id);
 
-            if (pToUpdate == null)
+            if (personalToUpdate == null)
             {
                 response.Errors.Add("ID not found.");
                 return NotFound(response);
@@ -102,12 +108,9 @@ namespace BusinessPortal2.Controllers
                 return BadRequest(response);
             }
 
-            pToUpdate.FullName = p_Update_DTO.FullName;
-            pToUpdate.Email = p_Update_DTO.Email;
-            pToUpdate.isAdmin = p_Update_DTO.isAdmin;
+            await repo.UpdatePersonal(_mapper.Map<Personal>(personalToUpdate));
 
-            await repo.Update(pToUpdate);
-
+            response.body = p_Update_DTO;
             response.isSuccess = true;
             response.StatusCode = System.Net.HttpStatusCode.OK;
             return Ok(response);
@@ -121,16 +124,17 @@ namespace BusinessPortal2.Controllers
             var personToDelete = await repo.GetPersonalById(personalId);
             if(personToDelete != null)
             {
-                await leaveRepo.DeleteLeave(personToDelete.Id);
-                await repo.Delete(personToDelete);
+                await repo.DeletePersonal(personToDelete);
 
+                response.body = personToDelete;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
 
                 return Ok(response);
             }
 
-            return NotFound();
+            response.Errors.Add($"Personal with id=[{personalId}] could not be found");
+            return NotFound(response);
         }
     }
 }

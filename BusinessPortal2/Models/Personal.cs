@@ -9,9 +9,7 @@ namespace BusinessPortal2.Models
         public string FullName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public bool  isAdmin { get; set; } = false;
-
-        public LeaveType? leavetype { get; set; }
+        public bool isAdmin { get; set; } = false;
 
         public ICollection<LeaveRequest> leaveRequests { get; set; } = new List<LeaveRequest>();
     }

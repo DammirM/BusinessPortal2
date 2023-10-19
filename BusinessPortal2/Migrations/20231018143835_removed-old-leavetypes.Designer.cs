@@ -4,6 +4,7 @@ using BusinessPortal2.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusinessPortal2.Migrations
 {
     [DbContext(typeof(PersonaldataContext))]
-    partial class PersonaldataContextModelSnapshot : ModelSnapshot
+    [Migration("20231018143835_removed-old-leavetypes")]
+    partial class removedoldleavetypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,9 +42,6 @@ namespace BusinessPortal2.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LeaveTypeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PersonalId")
                         .HasColumnType("int");
 
@@ -50,30 +50,9 @@ namespace BusinessPortal2.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LeaveTypeId");
-
                     b.HasIndex("PersonalId");
 
                     b.ToTable("leaveRequests");
-                });
-
-            modelBuilder.Entity("BusinessPortal2.Models.LeaveType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("LeaveDays")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LeaveName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LeaveType");
                 });
 
             modelBuilder.Entity("BusinessPortal2.Models.Personal", b =>
@@ -103,26 +82,13 @@ namespace BusinessPortal2.Migrations
 
             modelBuilder.Entity("BusinessPortal2.Models.LeaveRequest", b =>
                 {
-                    b.HasOne("BusinessPortal2.Models.LeaveType", "leaveType")
-                        .WithMany("leaveRequests")
-                        .HasForeignKey("LeaveTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BusinessPortal2.Models.Personal", "personal")
                         .WithMany("leaveRequests")
                         .HasForeignKey("PersonalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("leaveType");
-
                     b.Navigation("personal");
-                });
-
-            modelBuilder.Entity("BusinessPortal2.Models.LeaveType", b =>
-                {
-                    b.Navigation("leaveRequests");
                 });
 
             modelBuilder.Entity("BusinessPortal2.Models.Personal", b =>

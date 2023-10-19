@@ -12,10 +12,7 @@ namespace BusinessPortal2.Data
         }
 
         public DbSet<Personal> personals {get; set;}
-        public DbSet<LeaveType> leaveTypes {get; set;}
+        public DbSet<LeaveType> LeaveType { get; set; }
         public DbSet<LeaveRequest> leaveRequests { get; set;}
-
-
-
     }
 }

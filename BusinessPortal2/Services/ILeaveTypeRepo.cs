@@ -1,16 +1,17 @@
 ﻿using BusinessPortal2.Models;
+using BusinessPortal2.Models.DTO.LeaveTypeDTO;
 
 namespace BusinessPortal2.Services
 {
     public interface ILeaveTypeRepo
     {
-        Task<LeaveType> CreateLeave(LeaveType leaveType);
-        Task<IEnumerable<LeaveType>> GetAll();
+        Task<LeaveType> CreateLeaveType(LeaveType leaveType);
+        Task<IEnumerable<LeaveType>> GetAllLeaveType();
 
-        Task<LeaveType> GetById(int id);
+        Task<LeaveType> GetLeaveTypeById(int leaveTypeId);
 
-        Task<LeaveType> UpdateLeave(LeaveType tr);
+        Task<LeaveType> UpdateLeaveType(LeaveType leaveType);
 
-        Task DeleteLeave(int personalId);
+        Task<bool> DeleteLeaveType(int leaveTypeId);
     }
 }

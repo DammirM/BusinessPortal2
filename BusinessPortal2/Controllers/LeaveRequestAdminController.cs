@@ -43,12 +43,12 @@ namespace BusinessPortal2.Controllers
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
 
-            var allLeaveRequests = await _leaveRequestAdminRepo.GetAll(personalId);
+            var allLeaveRequests = await _leaveRequestAdminRepo.GetAllLeaveRequest(personalId);
             if (allLeaveRequests.Any())
             {
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
-                response.body = _mapper.Map<IEnumerable<LeaveRequestReadDTO>>(allLeaveRequests);
+                response.body = _mapper.Map<IEnumerable<LeaveRequestReadAdminDTO>>(allLeaveRequests);
 
                 return Ok(response);
             }
@@ -63,7 +63,7 @@ namespace BusinessPortal2.Controllers
             var leaveRequestSingle = await _leaveRequestAdminRepo.GetById(leaveRequestId);
             if (leaveRequestSingle != null)
             {
-                response.body = _mapper.Map<LeaveRequestReadDTO>(leaveRequestSingle);
+                response.body = _mapper.Map<LeaveRequestReadAdminDTO>(leaveRequestSingle);
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
 
@@ -79,12 +79,12 @@ namespace BusinessPortal2.Controllers
 
             if (leaveRequestCreateDTO != null)
             {
-                await _leaveRequestAdminRepo.CreateLeaveRequuest(_mapper.Map<LeaveRequest>(leaveRequestCreateDTO));
+                await _leaveRequestAdminRepo.CreateLeaveRequest(_mapper.Map<LeaveRequest>(leaveRequestCreateDTO));
                 response.body = leaveRequestCreateDTO;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.Created;
 
-                return Ok(response);
+                return Created("Created", response);
             }
             return BadRequest(response);
         }
