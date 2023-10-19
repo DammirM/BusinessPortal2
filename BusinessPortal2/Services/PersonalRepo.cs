@@ -1,7 +1,10 @@
 ﻿using BusinessPortal2.Data;
 using BusinessPortal2.Models;
+using BusinessPortal2.Models.DTO.PersonalDTO;
+using BusinessPortal2.Models.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BusinessPortal2.Services
 {
@@ -28,9 +31,26 @@ namespace BusinessPortal2.Services
             return await context.personals.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public Task Login()
+        public async Task<LoginResult> Login(LoginPersonalDTO personal)
         {
-            throw new NotImplementedException();
+            LoginResult loginResult = new LoginResult() { User = null, IsUserValid = false };
+
+            var userToLogin = await context.personals
+                .FirstOrDefaultAsync(email => email.Email == personal.Email);
+
+            if(userToLogin != null)
+            {
+                var passwordEquality = BCrypt.Net.BCrypt.Verify(personal.Password, userToLogin.Password);
+                if (passwordEquality)
+                {
+                    loginResult.IsUserValid = true;
+                    loginResult.User = userToLogin;
+
+                    return loginResult;
+                }
+            }
+
+            return loginResult;
         }
 
         public async Task<Personal> Register(Personal p)
