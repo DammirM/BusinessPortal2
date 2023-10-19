@@ -12,10 +12,15 @@ namespace BusinessPortal2.Validation
         {
             _context = context;
 
-            RuleFor(model => model.FullName).NotEmpty().MinimumLength(4).MaximumLength(40);
-            RuleFor(model => model.Email).NotEmpty().EmailAddress()
+            RuleFor(model => model.FullName)
+                .NotEmpty().WithMessage("Full Name is required.")
+                .MinimumLength(2).WithMessage("Full Name must be at least 2 characters long.")
+                .MaximumLength(40).WithMessage("Full Name cannot exceed 40 characters.");
+            RuleFor(model => model.Email)
+                .NotEmpty().WithMessage("Email is required.")
+                .EmailAddress().WithMessage("Invalid email format.")
                 .MustAsync(async (Email, cancellationToken) => await EmailExists(Email, cancellationToken))
-                .WithMessage("Email already exist.");
+                .WithMessage("Email already exists. Please use a different email address.");
             RuleFor(model => model.Password)
             .NotEmpty().WithMessage("Password is required.")
             .MinimumLength(8).WithMessage("Password must be at least 8 characters long.")
