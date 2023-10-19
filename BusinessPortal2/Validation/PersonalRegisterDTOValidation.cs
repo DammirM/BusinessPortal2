@@ -14,7 +14,7 @@ namespace BusinessPortal2.Validation
 
             RuleFor(model => model.FullName).NotEmpty().MinimumLength(4).MaximumLength(40);
             RuleFor(model => model.Email).NotEmpty().EmailAddress()
-                .MustAsync(async (email, cancellationToken) => await EmailExists(email, cancellationToken))
+                .MustAsync(async (Email, cancellationToken) => await EmailExists(Email, cancellationToken))
                 .WithMessage("Email already exist.");
             RuleFor(model => model.Password)
             .NotEmpty().WithMessage("Password is required.")
@@ -25,7 +25,7 @@ namespace BusinessPortal2.Validation
 
         public async Task<bool> EmailExists(string email, CancellationToken cToken)
         {
-            return await _context.personals.AnyAsync(e => e.Email == email);
+            return !(await _context.personals.AnyAsync(e => e.Email.ToLower() == email.ToLower(), cToken));
         }
     }
 }
