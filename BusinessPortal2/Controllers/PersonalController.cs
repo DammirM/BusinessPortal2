@@ -6,10 +6,13 @@ using BusinessPortal2.Models.DTO.PersonalDTO;
 using BusinessPortal2.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography.Xml;
 
 namespace BusinessPortal2.Controllers
 {
@@ -89,28 +92,44 @@ namespace BusinessPortal2.Controllers
         }
 
 
-        [HttpGet("Login")]
-        //public async Task<IActionResult> LoginPersonal([FromBody] LoginPersonalDTO l_Personal_DTO,
-        //    [FromServices] IMapper _mapper)
-        //{
-        //    var loginResult = await repo.Login(l_Personal_DTO);
-        //    if(loginResult.IsUserValid)
-        //    {
+        [HttpPost("Login")]
+        public async Task<ActionResult<string>> LoginPersonal([FromBody] LoginPersonalDTO l_Personal_DTO,
+            [FromServices] IMapper _mapper)
+        {
+            var loginResult = await repo.Login(l_Personal_DTO);
+            if (loginResult.IsUserValid)
+            {
+                var test = CreateToken(loginResult.User);
+                return Ok(test);
+            }
 
-        //    }
-        //}
+            return BadRequest("No token");
+        }
 
-        //private string CreateToken(Personal User)
-        //{
-        //    List<Claim> claim = new List<Claim>()
-        //    {
-        //        new Claim("Id", User.Id.ToString()),
-        //        new Claim("Email", User.Email),
-        //        User.isAdmin ? new Claim(ClaimTypes.Role, "Admin") : new Claim(ClaimTypes.Role, "User")
-        //    };
+        private string CreateToken(Personal User)
+        {
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim("jti", Guid.NewGuid().ToString()),
+                new Claim("id", User.Id.ToString()),
+                new Claim("email", User.Email),
+                User.isAdmin ? new Claim("role", "admin") : new Claim(ClaimTypes.Role, "user")
+            };
 
-        //    var key = new SymmetricSecurityKey()
-        //}
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+                confirguration.GetSection("Appsettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+        }
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdatePersonal([FromBody] PersonalUpdateDTO p_Update_DTO, [FromServices] IMapper _mapper,
