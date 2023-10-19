@@ -92,7 +92,7 @@ namespace BusinessPortal2.Controllers
         }
 
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<ActionResult<string>> LoginPersonal([FromBody] LoginPersonalDTO l_Personal_DTO,
             [FromServices] IMapper _mapper)
         {
