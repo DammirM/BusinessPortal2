@@ -69,7 +69,7 @@ namespace BusinessPortal2.Controllers
             [FromServices] IValidator<RegisterPersonalDTO> _validate)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
-            var result = _validate.Validate(r_Personal_DTO);
+            var result = await _validate.ValidateAsync(r_Personal_DTO);
 
             if (!result.IsValid)
             {
