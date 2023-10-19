@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using BusinessPortal2.Models;
 using BusinessPortal2.Services;
 using AutoMapper;
-using BusinessPortal2.Models.DTO;
+using BusinessPortal2.Models.DTO.LeaveRequestDTO;
+using BusinessPortal2.Models.DTO.LeaveTypeDTO;
 
 namespace BusinessPortal2.Controllers
 {
@@ -22,60 +23,89 @@ namespace BusinessPortal2.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
         public async Task<IActionResult> GetAllLeaveTypes()
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
 
-            var leaves = await _leaveTypeRepository.GetAll();
-            if (leaves.Any())
+            var leaveTypeAll = await _leaveTypeRepository.GetAllLeaveType();
+            if (leaveTypeAll.Any())
             {
-                response.body= leaves;
+                response.body = _mapper.Map<IEnumerable<LeaveTypeReadDTO>>(leaveTypeAll);
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 return Ok(response);
             }
 
+            return BadRequest(response);
+        }
+
+        [HttpGet("get/{leaveTypeId}")]
+        public async Task<IActionResult> GetLeaveTypeById(int leaveTypeId)
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
+
+            var leaveTypeById = await _leaveTypeRepository.GetLeaveTypeById(leaveTypeId);
+            if (leaveTypeById != null)
+            {
+                response.body = _mapper.Map<LeaveTypeReadDTO>(leaveTypeById);
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateLeaveType(LeaveTypeCreateDTO leaveTypeCreateDTO)
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+
+            if (leaveTypeCreateDTO != null)
+            {
+                await _leaveTypeRepository.CreateLeaveType(_mapper.Map<LeaveType>(leaveTypeCreateDTO));
+                response.body = leaveTypeCreateDTO;
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                return Created("Created", response);
+            }
+            response.Errors.Add("LeaveTypeCreateDTO is null");
+            return BadRequest(response);
+        }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateLeaveType(LeaveTypeUpdateDTO leaveTypeUpdateDTO)
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+
+            if (leaveTypeUpdateDTO != null)
+            {
+                await _leaveTypeRepository.UpdateLeaveType(_mapper.Map<LeaveType>(leaveTypeUpdateDTO));
+                response.body = leaveTypeUpdateDTO;
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                return Ok(response);
+            }
+            response.Errors.Add("LeaveTypeUpdateDTO is null");
+            return BadRequest(response);
+        }
+
+        [HttpDelete("delete/{leaveTypeId}")]
+        public async Task<IActionResult> DeleteLeaveType(int leaveTypeId)
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+
+            var leaveTypeToDelete = await _leaveTypeRepository.GetLeaveTypeById(leaveTypeId);
+            if (leaveTypeToDelete != null)
+            {
+                await _leaveTypeRepository.DeleteLeaveType(leaveTypeId);
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                return Ok(response);
+            }
+            response.Errors.Add($"LeaveType with id=[{leaveTypeId}] could not be found");
             return NotFound(response);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetLeaveTypeById(int id)
-        {
-            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
-
-            var leave = await _leaveTypeRepository.GetById(id);
-            if (leave != null)
-            {
-                response.body= leave;
-                response.isSuccess = true;
-                response.StatusCode = System.Net.HttpStatusCode.OK;
-
-                return Ok(response);
-            }
-
-            return NotFound("Personal Not sfjhdsfk");
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLeaveType(int id, UpdateLeaveDTO updateLeaveDTO)
-        {
-            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
-
-            var leaveTypeToUpdate = _mapper.Map<LeaveType>(updateLeaveDTO);
-            leaveTypeToUpdate.PersonalId = id;
-
-            var updatedLeaveType = await _leaveTypeRepository.UpdateLeave(id, leaveTypeToUpdate);
-
-            if (updatedLeaveType != null)
-            {
-                response.body = updatedLeaveType;
-                response.isSuccess = true;
-                response.StatusCode = System.Net.HttpStatusCode.NoContent;
-                return Ok(response);
-            }
-
-            return NotFound("PersonalId Not Found");
         }
     }
 }

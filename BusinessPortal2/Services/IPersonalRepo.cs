@@ -7,11 +7,11 @@ namespace BusinessPortal2.Services
 {
     public interface IPersonalRepo
     {
-        public Task<Personal> Register(Personal personal);
+        public Task<Personal> RegisterPersonal(Personal personal);
         public Task<LoginResult> Login();
-        public Task Delete(Personal personal);
-        public Task<Personal> GetPersonalById(int id);
-        public Task<IEnumerable<Personal>> GetAll();
-        public Task Update(Personal personal);
+        public Task DeletePersonal(Personal personal);
+        public Task<Personal> GetPersonalById(int personalId);
+        public Task<IEnumerable<Personal>> GetAllPersonal();
+        public Task UpdatePersonal(Personal personal);
     }
 }

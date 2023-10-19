@@ -4,10 +4,10 @@ namespace BusinessPortal2.Services
 {
     public interface ILeaveRequestRepo
     {
-        Task<LeaveRequest> CreateLeaveRequuest(LeaveRequest LeaveRequest);
-        Task<IEnumerable<LeaveRequest>> GetAll(int id);
+        Task<LeaveRequest> CreateLeaveRequest(LeaveRequest LeaveRequest);
+        Task<IEnumerable<LeaveRequest>> GetAllLeaveRequest(int id);
 
-        Task<LeaveRequest> GetById(int id, int personalId);
+        Task<LeaveRequest> GetLeaveRequestById(int id, int personalId);
 
     }
 }
