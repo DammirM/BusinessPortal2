@@ -7,6 +7,7 @@ using BusinessPortal2.Services;
 using AutoMapper;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Models.DTO.LeaveTypeDTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BusinessPortal2.Controllers
 {

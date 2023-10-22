@@ -5,6 +5,8 @@ using BusinessPortal2.Models;
 using BusinessPortal2.Models.DTO.PersonalDTO;
 using BusinessPortal2.Services;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -13,6 +15,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography.Xml;
+using System.Text;
 
 namespace BusinessPortal2.Controllers
 {
@@ -99,37 +102,58 @@ namespace BusinessPortal2.Controllers
             var loginResult = await repo.Login(l_Personal_DTO);
             if (loginResult.IsUserValid)
             {
-                var test = CreateToken(loginResult.User);
-                return Ok(test);
+                var token = CreateToken(loginResult.User);
+
+                var cookieOptions = new CookieOptions
+                {
+                    Expires = DateTime.Now.AddHours(1),
+                    HttpOnly = true,
+                    Secure = true
+                };
+
+                Response.Cookies.Append("AuthToken", token, cookieOptions);
+
+                return Ok(token);
             }
 
-            return BadRequest("No token");
+            return BadRequest("Login Failed: The provided credentials are invalid or the account does not exist. Please double-check your username and password, and ensure you have registered.");
         }
 
-        private string CreateToken(Personal User)
+        private string CreateToken(Personal user)
         {
-            List<Claim> claims = new List<Claim>()
+            var secretKey = confirguration.GetSection("Appsettings:Token").Value;
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new List<Claim>
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, user.FullName), 
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+            // Additional claims
+            claims.Add(new Claim("id", user.Id.ToString()));
+            claims.Add(new Claim("email", user.Email));
+            if (user.isAdmin)
             {
-                new Claim("jti", Guid.NewGuid().ToString()),
-                new Claim("id", User.Id.ToString()),
-                new Claim("email", User.Email),
-                User.isAdmin ? new Claim("role", "admin") : new Claim(ClaimTypes.Role, "user")
-            };
-
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
-                confirguration.GetSection("Appsettings:Token").Value));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+                claims.Add(new Claim(ClaimTypes.Role, "admin"));
+            }
+            else
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "user"));
+            }
 
             var token = new JwtSecurityToken(
+                issuer: "YourIssuer",    // Change this to your issuer
+                audience: "YourAudience",  // Change this to your audience
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds);
+                expires: DateTime.UtcNow.AddHours(1), 
+                signingCredentials: credentials
+            );
 
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdatePersonal([FromBody] PersonalUpdateDTO p_Update_DTO, [FromServices] IMapper _mapper,
