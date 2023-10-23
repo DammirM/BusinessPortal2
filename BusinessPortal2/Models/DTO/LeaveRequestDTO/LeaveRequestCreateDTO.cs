@@ -4,7 +4,7 @@
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public DateTime DateRequest { get; set; }
+        public DateTime DateRequest { get; set; } = DateTime.Now;
         public string ApprovalState { get; set; }
 
         public int LeaveTypeId { get; set; }

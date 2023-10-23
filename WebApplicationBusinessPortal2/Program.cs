@@ -9,6 +9,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 builder.Services.AddSingleton<IHttpClientService, HttpClientService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
+builder.Services.AddScoped<IGetSelectListService, GetSelectListService>();
 
 
 var app = builder.Build();
@@ -27,11 +28,6 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers(); // Enable attribute routing
-});
 
 app.MapControllerRoute(
     name: "default",

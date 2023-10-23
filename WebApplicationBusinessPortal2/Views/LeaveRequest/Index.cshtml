@@ -16,6 +16,9 @@
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.leaveType.LeaveName)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.StartDate)
             </th>
             <th>
@@ -26,9 +29,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ApprovalState)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.leaveType.LeaveName)
             </th>
         </tr>
     </thead>
