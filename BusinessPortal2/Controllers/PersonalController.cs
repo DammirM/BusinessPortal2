@@ -6,8 +6,13 @@ using BusinessPortal2.Models.DTO.PersonalDTO;
 using BusinessPortal2.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography.Xml;
 
 namespace BusinessPortal2.Controllers
 {
@@ -16,9 +21,11 @@ namespace BusinessPortal2.Controllers
     public class PersonalController : Controller
     {
         private readonly IPersonalRepo repo;
-        public PersonalController(IPersonalRepo _repo)
+        private readonly IConfiguration confirguration;
+        public PersonalController(IPersonalRepo _repo, IConfiguration _configuration)
         {
             this.repo = _repo;
+            this.confirguration = _configuration;
         }
 
         [HttpGet("getall")]
@@ -62,7 +69,7 @@ namespace BusinessPortal2.Controllers
             [FromServices] IValidator<RegisterPersonalDTO> _validate)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
-            var result = _validate.Validate(r_Personal_DTO);
+            var result = await _validate.ValidateAsync(r_Personal_DTO);
 
             if (!result.IsValid)
             {
@@ -82,6 +89,46 @@ namespace BusinessPortal2.Controllers
             response.StatusCode = System.Net.HttpStatusCode.Created;
 
             return Created("Created", response);
+        }
+
+
+        [HttpPost("login")]
+        public async Task<ActionResult<string>> LoginPersonal([FromBody] LoginPersonalDTO l_Personal_DTO,
+            [FromServices] IMapper _mapper)
+        {
+            var loginResult = await repo.Login(l_Personal_DTO);
+            if (loginResult.IsUserValid)
+            {
+                var test = CreateToken(loginResult.User);
+                return Ok(test);
+            }
+
+            return BadRequest("No token");
+        }
+
+        private string CreateToken(Personal User)
+        {
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim("jti", Guid.NewGuid().ToString()),
+                new Claim("id", User.Id.ToString()),
+                new Claim("email", User.Email),
+                User.isAdmin ? new Claim("role", "admin") : new Claim(ClaimTypes.Role, "user")
+            };
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+                confirguration.GetSection("Appsettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
         }
 
         [HttpPut("update")]
