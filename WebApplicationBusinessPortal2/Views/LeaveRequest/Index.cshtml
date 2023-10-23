@@ -48,15 +48,14 @@
                 @Html.DisplayFor(modelItem => item.EndDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateRequest)
+                @Html.DisplayFor(modelItem => item.DateRequest) 
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ApprovalState)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Details", "Details", new {leaveRequestId = item.Id})
+                @Html.ActionLink("Delete", "Delete", new {leaveRequestId = item.Id})
             </td>
         </tr>
 }
