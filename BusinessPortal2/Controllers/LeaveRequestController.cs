@@ -28,7 +28,7 @@ namespace BusinessPortal2.Controllers
             var allLeaveRequests = await _leaveRequestRepo.GetAllLeaveRequest(personalId);
             if(allLeaveRequests.Any())
             {
-                response.body = _mapper.Map<IEnumerable<LeaveRequestReadDTO>>(allLeaveRequests);
+                response.Result = _mapper.Map<IEnumerable<LeaveRequestReadDTO>>(allLeaveRequests);
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
 
@@ -45,7 +45,7 @@ namespace BusinessPortal2.Controllers
             var leaveRequestSingle = await _leaveRequestRepo.GetLeaveRequestById(leaveRequestId, personalId);
             if(leaveRequestSingle != null)
             {
-                response.body = _mapper.Map<LeaveRequestReadDTO>(leaveRequestSingle);
+                response.Result = _mapper.Map<LeaveRequestReadDTO>(leaveRequestSingle);
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
 
@@ -62,12 +62,29 @@ namespace BusinessPortal2.Controllers
             if(leaveRequestCreateDTO != null)
             {
                 await _leaveRequestRepo.CreateLeaveRequest(_mapper.Map<LeaveRequest>(leaveRequestCreateDTO));
-                response.body = leaveRequestCreateDTO;
+                response.Result = leaveRequestCreateDTO;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.Created;
 
                 return Created("Created", response);
             }
+            return BadRequest(response);
+        }
+
+        [HttpDelete("delete/{personalId}/{leaveRequestId}")]
+        public async Task<IActionResult> DeleteLeaveRequest(int leaveRequestId, int personalId)
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+
+            var isDeleted = await _leaveRequestRepo.DeleteLeaveRequest(leaveRequestId, personalId);
+            if (isDeleted)
+            {
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+
+                return Ok(response);
+            }
+
             return BadRequest(response);
         }
     }

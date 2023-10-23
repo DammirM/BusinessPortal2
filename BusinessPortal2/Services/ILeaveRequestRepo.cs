@@ -9,5 +9,7 @@ namespace BusinessPortal2.Services
 
         Task<LeaveRequest> GetLeaveRequestById(int id, int personalId);
 
+        Task<bool> DeleteLeaveRequest(int id, int personalId);
+
     }
 }
