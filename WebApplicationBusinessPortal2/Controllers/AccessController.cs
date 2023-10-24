@@ -31,9 +31,20 @@ namespace WebApplicationBusinessPortal2.Controllers
             await Console.Out.WriteLineAsync(r_Personal_DTO.FullName);
             var response = await _accessService.RegisterAsync<AppResponse>(r_Personal_DTO);
 
-            if (response != null && response.IsSuccess)
+            if (response != null)
             {
-                return RedirectToAction(nameof(Login));
+                if (response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(Login));
+                }
+
+                if (response.ErrorMessages != null && response.ErrorMessages.Count > 0)
+                {
+                    foreach (var errorMessage in response.ErrorMessages)
+                    {
+                        ModelState.AddModelError(string.Empty, errorMessage);
+                    }
+                }
             }
 
             return View();
