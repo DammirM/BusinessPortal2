@@ -99,24 +99,21 @@ namespace BusinessPortal2.Controllers
         public async Task<ActionResult<string>> LoginPersonal([FromBody] LoginPersonalDTO l_Personal_DTO,
             [FromServices] IMapper _mapper)
         {
+
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest, Errors = new List<string>() { "Login Failed: The provided credentials are invalid or the account does not exist. Please double-check your username and password, and ensure you have registered." } };
             var loginResult = await repo.Login(l_Personal_DTO);
             if (loginResult.IsUserValid)
             {
                 var token = CreateToken(loginResult.User);
 
-                var cookieOptions = new CookieOptions
-                {
-                    Expires = DateTime.Now.AddHours(1),
-                    HttpOnly = true,
-                    Secure = true
-                };
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Result = token;
 
-                Response.Cookies.Append("AuthToken", token, cookieOptions);
-
-                return Ok(token);
+                return Ok(response);
             }
 
-            return BadRequest("Login Failed: The provided credentials are invalid or the account does not exist. Please double-check your username and password, and ensure you have registered.");
+            return BadRequest(response);
         }
 
         private string CreateToken(Personal user)
