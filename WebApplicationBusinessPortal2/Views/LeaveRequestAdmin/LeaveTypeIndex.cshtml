@@ -55,12 +55,12 @@
                 @Html.DisplayFor(modelItem => item.LeaveDays)
             </td>
                 <td>
-                        <a asp-action="Update"  asp-route-id="@item.Id">
+                    <a asp-action="UpdateLeave" asp-route-id="@item.Id">
                             Update <i class="fa fa-edit"></i>
                         </a>
 
-                                <a asp-action="Delete" asp-route-id="@item.Id">
-                    Delete <i class="fa fa-trash"></i>
+                    <a asp-action="DeleteLeave" asp-route-id="@item.Id">
+                        DeleteLeave <i class="fa fa-trash"></i>
                         </a>
             </td>
         </tr>

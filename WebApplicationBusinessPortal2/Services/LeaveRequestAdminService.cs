@@ -3,6 +3,7 @@ using static WebApplicationBusinessPortal2.Models.ConfigurationModels.ApiSetting
 using WebApplicationBusinessPortal2.Models;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Models.DTO.LeaveTypeDTO;
+using BusinessPortal2.Models.DTO.PersonalDTO;
 
 namespace WebApplicationBusinessPortal2.Services
 {
@@ -58,6 +59,16 @@ namespace WebApplicationBusinessPortal2.Services
             });
         }
 
+        public async Task<T> DeletePersonalAsync<T>(int Id)
+        {
+            return await SendAsync<T>(new ApiRequest
+            {
+                ApiType = ApiType.DELETE,
+                Url = _httpClientService.Client.BaseAddress + $"personal/delete/{Id}",
+                AccessToken = ""
+            });
+        }
+
         public async Task<T> GetLeaveRequestAdminAsync<T>()
         {
             return await SendAsync<T>(new ApiRequest
@@ -88,12 +99,32 @@ namespace WebApplicationBusinessPortal2.Services
             });
         }
 
+        public async Task<T> GetLeaveTypeByIdtAdminAsync<T>(int Id)
+        {
+            return await SendAsync<T>(new ApiRequest
+            {
+                ApiType = ApiType.GET,
+                Url = _httpClientService.Client.BaseAddress + $"leavetypes/get/{Id}",
+                AccessToken = ""
+            });
+        }
+
         public async Task<T> GetPersonalAdminAsync<T>()
         {
             return await SendAsync<T>(new ApiRequest
             {
                 ApiType = ApiType.GET,
                 Url = _httpClientService.Client.BaseAddress + $"personal/getall",
+                AccessToken = ""
+            });
+        }
+
+        public async Task<T> GetPersonalByIdAdminAsync<T>(int Id)
+        {
+            return await SendAsync<T>(new ApiRequest
+            {
+                ApiType = ApiType.GET,
+                Url = _httpClientService.Client.BaseAddress + $"personal/get/{Id}",
                 AccessToken = ""
             });
         }
@@ -120,9 +151,27 @@ namespace WebApplicationBusinessPortal2.Services
             });
         }
 
-        public Task<T> UpdateLeaveRequestAdminAsync<T>(LeaveRequestUpdateDTO leaveRequest)
+
+        public async Task<T> UpdateLeaveTypeAdminAsync<T>(LeaveTypeUpdateDTO leaveDTO)
         {
-            throw new NotImplementedException();
+            return await SendAsync<T>(new ApiRequest
+            {
+                ApiType = ApiType.PUT,
+                Data = leaveDTO,
+                Url = _httpClientService.Client.BaseAddress + "leavetypes/update",
+                AccessToken = ""
+            });
+        }
+
+        public async Task<T> UpdatePersonalAdminAsync<T>(PersonalUpdateDTO personalDTO)
+        {
+            return await SendAsync<T>(new ApiRequest
+            {
+                ApiType = ApiType.PUT,
+                Data = personalDTO,
+                Url = _httpClientService.Client.BaseAddress + "personal/update",
+                AccessToken = ""
+            });
         }
     }
 }

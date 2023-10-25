@@ -39,6 +39,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.isAdmin)
             </td>
+                <td>
+                            <a asp-action="UpdatePersonal"  asp-route-id="@item.Id">
+                            Update <i class="fa fa-edit"></i>
+                        </a>
+
+                        <a asp-action="DeletePersonal" asp-route-id="@item.Id">
+                            Delete <i class="fa fa-trash"></i>
+                        </a>
+                </td>
         </tr>
 }
         <div>
