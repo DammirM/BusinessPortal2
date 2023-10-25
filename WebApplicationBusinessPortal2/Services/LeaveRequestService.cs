@@ -19,7 +19,7 @@ namespace WebApplicationBusinessPortal2.Services
             _httpClientService = httpClientService;
         }
 
-        public async Task<T> CreateLeaveRequestAsync<T>(T leaveRequest)
+        public async Task<T> CreateLeaveRequestAsync<T>(LeaveRequestCreateDTO leaveRequest)
         {
             return await SendAsync<T>(new ApiRequest
             {

@@ -61,6 +61,8 @@ namespace BusinessPortal2.Controllers
 
             if(leaveRequestCreateDTO != null)
             {
+                leaveRequestCreateDTO.ApprovalState = "Pending";
+                leaveRequestCreateDTO.PersonalId = 1;
                 await _leaveRequestRepo.CreateLeaveRequest(_mapper.Map<LeaveRequest>(leaveRequestCreateDTO));
                 response.Result = leaveRequestCreateDTO;
                 response.isSuccess = true;

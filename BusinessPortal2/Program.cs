@@ -39,37 +39,6 @@ namespace BusinessPortal2
             builder.Services.AddScoped<ILeaveTypeRepo, LeaveTypeRepo>();
             builder.Services.AddScoped<ILeaveRequestRepo, LeaveRequestRepo>();
             builder.Services.AddScoped<LeaveRequestAdminRepo, LeaveRequestAdminRepo>();
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddCookie(x =>
-            {
-                x.Cookie.Name = "AuthToken";
-            }).AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                            builder.Configuration.GetSection("Appsettings:Token").Value)),
-                        ValidateIssuer = true,
-                        ValidIssuer = "YourIssuer",   
-                        ValidateAudience = true,
-                        ValidAudience = "YourAudience", 
-                        RequireExpirationTime = true,
-                        ClockSkew = TimeSpan.Zero // disables the default clock skew
-                    };
-
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnMessageReceived = context =>
-                        {
-                            context.Token = context.Request.Cookies["AuthToken"];
-                            return Task.CompletedTask;
-                        }
-                    };
-                });
 
             // Service for Mapping
             builder.Services.AddAutoMapper(typeof(MappingConfig));
@@ -78,7 +47,8 @@ namespace BusinessPortal2
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
             builder.Services.AddDbContext<PersonaldataContext>(options => options
-            .UseSqlServer(builder.Configuration.GetConnectionString("ConnectionDamir")));
+            //.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionDamir")));
+            //.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionMaxLaptop")));
 
             var app = builder.Build();
 
