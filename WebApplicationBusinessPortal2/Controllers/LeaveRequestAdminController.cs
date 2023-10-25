@@ -1,5 +1,6 @@
 ﻿using BusinessPortal2.Models;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
+using BusinessPortal2.Models.DTO.LeaveTypeDTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -14,13 +15,13 @@ namespace WebApplicationBusinessPortal2.Controllers
 
         private readonly IHttpClientService httpClientService;
         private readonly ILeaveRequestAdminService _leaveRequestAdminService;
-        private readonly ILogger<LeaveRequestAdminController> _logger;
+        private readonly IGetSelectListService _getSelectListService;
 
-        public LeaveRequestAdminController(ILogger<LeaveRequestAdminController> logger, IHttpClientService httpClientService, ILeaveRequestAdminService leaveRequestAdminService)
+        public LeaveRequestAdminController(IGetSelectListService getSelectListService, IHttpClientService httpClientService, ILeaveRequestAdminService leaveRequestAdminService)
         {
             this.httpClientService = httpClientService;
             _leaveRequestAdminService = leaveRequestAdminService;
-            _logger = logger;
+            _getSelectListService= getSelectListService;
 
         }
 
@@ -38,14 +39,30 @@ namespace WebApplicationBusinessPortal2.Controllers
             }
             return View(list);
         }
+
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
+            List<SelectListItem> leaveTypeSelectList = new List<SelectListItem>();
+            List<LeaveTypeSimpleReadDTO> leaveTypes = new List<LeaveTypeSimpleReadDTO>();
+            var response = await _getSelectListService.GetSelectListAsync<AppResponse>("leavetypes/getall");
+            if (response.IsSuccess)
+            {
+                leaveTypes = JsonConvert.DeserializeObject<List<LeaveTypeSimpleReadDTO>>(response.Result.ToString());
+
+                foreach (var leaveType in leaveTypes)
+                {
+                    leaveTypeSelectList.Add(new SelectListItem { Text = leaveType.LeaveName, Value = leaveType.Id.ToString() });
+                }
+            }
+            ViewBag.LeaveTypes = leaveTypeSelectList;
+
             return View();
         }
 
         [HttpPost]
 
-        public async Task<IActionResult> Create(LeaveRequestCreateDTO Dto)
+        public async Task<IActionResult> Create([FromForm] LeaveRequestCreateDTO Dto)
         {
             if (ModelState.IsValid)
             {

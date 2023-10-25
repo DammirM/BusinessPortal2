@@ -1,4 +1,4 @@
-﻿using BusinessPortal2.Models.DTO.LeaveRequestDTO.LeaveRequestDTO;
+﻿using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 
 namespace WebApplicationBusinessPortal2.Services
 {
