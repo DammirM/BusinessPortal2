@@ -28,12 +28,12 @@ namespace BusinessPortal2.Services
                 .ToListAsync();
         }
 
-        public async Task<LeaveRequest> GetLeaveRequestById(int id, int personalId)
+        public async Task<LeaveRequest> GetLeaveRequestById(int leaveRequestId, int personalId)
         {
             return await _context.leaveRequests
-                .Where(leaveRequest => leaveRequest.Id == personalId)
+                .Where(leaveRequest => leaveRequest.PersonalId == personalId)
                 .Include(leaveRequest => leaveRequest.leaveType)
-                .FirstOrDefaultAsync(leaveRequest => leaveRequest.Id == id);
+                .FirstOrDefaultAsync(leaveRequest => leaveRequest.Id == leaveRequestId);
         }
 
         public async Task<bool> DeleteLeaveRequest(int id, int personalId)

@@ -1,4 +1,5 @@
-﻿using BusinessPortal2.Models;
+﻿using Azure;
+using BusinessPortal2.Models;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO.LeaveRequestDTO;
 using BusinessPortal2.Models.DTO.LeaveTypeDTO;
@@ -9,25 +10,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Text;
 using WebApplicationBusinessPortal2.Models;
+using WebApplicationBusinessPortal2.Models.ViewModels;
 using WebApplicationBusinessPortal2.Services;
 
 namespace WebApplicationBusinessPortal2.Controllers
 {
-    [Route("[controller]")]
-    [ApiController]
     public class LeaveRequestController : Controller
     {
-        private readonly IHttpClientService httpClientService;
         private readonly ILeaveRequestService _leaveRequestService;
+        private readonly IGetSelectListService _getSelectListService;
 
-        public LeaveRequestController(IHttpClientService httpClientService, ILeaveRequestService leaveRequestService)
+        public LeaveRequestController(ILeaveRequestService leaveRequestService, IGetSelectListService getSelectListService)
         {
-            this.httpClientService = httpClientService;
             _leaveRequestService = leaveRequestService;
-
+            _getSelectListService = getSelectListService;
         }
 
-        // GET: LeaveRequestController
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -41,49 +39,46 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(leaveRequests);
         }
 
-        // GET: LeaveRequestController/Details/5
-        [HttpGet("{leaveRequestId}", Name = "Details")]
-        public ActionResult Details(int leaveRequestId)
+        [HttpGet]
+        public async Task<IActionResult> Details(int leaveRequestId)
         {
             LeaveRequestReadDTO leaveRequest = new LeaveRequestReadDTO();
-            HttpResponseMessage responseMessage = httpClientService.Client
-                .GetAsync(httpClientService.Client.BaseAddress + "user/leaverequest/get/" + leaveRequestId).Result;
-
-            if (responseMessage.IsSuccessStatusCode)
+            var response = await _leaveRequestService.GetLeaveRequestByIdAsync<AppResponse>(1, leaveRequestId);
+            if (response.IsSuccess)
             {
-                string data = responseMessage.Content.ReadAsStringAsync().Result;
-                leaveRequest = JsonConvert.DeserializeObject<LeaveRequestReadDTO>(data);
+                leaveRequest = JsonConvert.DeserializeObject<LeaveRequestReadDTO>(response.Result.ToString());
             }
             return View(leaveRequest);
         }
 
-        // GET: LeaveRequestController/Create
-        public ActionResult Create()
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
-            var leaveTypeList = GetSelectListFromApi<LeaveTypeSimpleReadDTO>("leavetype/getall");
-            var leaveTypeSelectList = leaveTypeList.Select(leaveType => new SelectListItem
+            List<SelectListItem> leaveTypeSelectList = new List<SelectListItem>();
+            List<LeaveTypeSimpleReadDTO> leaveTypes = new List<LeaveTypeSimpleReadDTO>();
+            var response = await _getSelectListService.GetSelectListAsync<AppResponse>("leavetypes/getall");
+            if (response.IsSuccess)
             {
-                Text = leaveType.LeaveName,
-                Value = leaveType.Id.ToString()
-            }).ToList();
+                leaveTypes = JsonConvert.DeserializeObject<List<LeaveTypeSimpleReadDTO>>(response.Result.ToString());
 
-            ViewBag.LeaveType = leaveTypeSelectList;
+                foreach (var leaveType in leaveTypes)
+                {
+                    leaveTypeSelectList.Add(new SelectListItem { Text = leaveType.LeaveName, Value = leaveType.Id.ToString() });
+                }
+            }
+            ViewBag.LeaveTypes = leaveTypeSelectList;
 
             return View();
         }
 
-        // POST: LeaveRequestController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(LeaveRequestCreateDTO leaveRequestToCreate)
+        [ValidateAntiForgeryToken]  
+        public async Task<IActionResult> Create([FromForm] LeaveRequestCreateDTO leaveRequestToCreate)
         {
             if (ModelState.IsValid)
             {
-                string data = JsonConvert.SerializeObject(leaveRequestToCreate);
-                StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
-                HttpResponseMessage responseMessage = httpClientService.Client
-                    .PostAsync(httpClientService.Client.BaseAddress + "user/leaverequest/create", content).Result;
-                if (responseMessage.IsSuccessStatusCode)
+                var response = await _leaveRequestService.CreateLeaveRequestAsync<AppResponse>(leaveRequestToCreate);
+                if (response.IsSuccess)
                 {
                     return RedirectToAction(nameof(Index));
                 }
@@ -91,16 +86,28 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(leaveRequestToCreate);
         }
 
-        // POST: LeaveRequestController/Delete/5
-        [HttpDelete("{leaveRequestId}")]
+        [HttpGet]
+        public async Task<IActionResult> Delete(int leaveRequestId)
+        {
+            int personalId = 1;
+            LeaveRequestReadDTO leaveRequest = new LeaveRequestReadDTO();
+            var response = await _leaveRequestService.GetLeaveRequestByIdAsync<AppResponse>(personalId, leaveRequestId);
+            if (response.IsSuccess)
+            {
+                leaveRequest = JsonConvert.DeserializeObject<LeaveRequestReadDTO>(response.Result.ToString());
+            }
+            return View(leaveRequest);
+        }
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int leaveRequestId, int personalId)
+        public async Task<IActionResult> Delete([FromForm]LeaveRequestReadDTO leaveRequestRead)
         {
             if (ModelState.IsValid)
             {
-                HttpResponseMessage responseMessage = httpClientService.Client
-                    .DeleteAsync(httpClientService.Client.BaseAddress + "user/leaverequest/delete/" + leaveRequestId).Result;
-                if (responseMessage.IsSuccessStatusCode)
+                int personalId = 1;
+                var response = await _leaveRequestService.DeleteLeaveRequestAsync<AppResponse>(personalId, leaveRequestRead.Id);
+                if (response.IsSuccess)
                 {
                     return RedirectToAction(nameof(Index));
                 }
@@ -108,18 +115,5 @@ namespace WebApplicationBusinessPortal2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private List<T> GetSelectListFromApi<T>(string apiEndpoint)
-        {
-            var availableData = new List<T>();
-            HttpResponseMessage response = httpClientService.Client.GetAsync(httpClientService.Client.BaseAddress + apiEndpoint).Result;
-
-            if (response.IsSuccessStatusCode)
-            {
-                string data = response.Content.ReadAsStringAsync().Result;
-                availableData = JsonConvert.DeserializeObject<List<T>>(data);
-            }
-
-            return availableData;
-        }
     }
 }
