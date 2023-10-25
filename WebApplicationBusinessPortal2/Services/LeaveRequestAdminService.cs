@@ -48,6 +48,16 @@ namespace WebApplicationBusinessPortal2.Services
             });
         }
 
+        public async Task<T> DeleteLeaveTypeAsync<T>(int Id)
+        {
+            return await SendAsync<T>(new ApiRequest
+            {
+                ApiType = ApiType.DELETE,
+                Url = _httpClientService.Client.BaseAddress + $"leavetypes/delete/{Id}",
+                AccessToken = ""
+            });
+        }
+
         public async Task<T> GetLeaveRequestAdminAsync<T>()
         {
             return await SendAsync<T>(new ApiRequest
@@ -64,6 +74,16 @@ namespace WebApplicationBusinessPortal2.Services
             {
                 ApiType = ApiType.GET,
                 Url = _httpClientService.Client.BaseAddress + $"admin/leaverequest/get/{Id}",
+                AccessToken = ""
+            });
+        }
+
+        public async Task<T> GetLeaveTypeAsync<T>()
+        {
+            return await SendAsync<T>(new ApiRequest
+            {
+                ApiType = ApiType.GET,
+                Url = _httpClientService.Client.BaseAddress + $"leavetypes/getall",
                 AccessToken = ""
             });
         }
@@ -98,6 +118,11 @@ namespace WebApplicationBusinessPortal2.Services
                 Url = _httpClientService.Client.BaseAddress + "admin/leaverequest/update",
                 AccessToken = ""
             });
+        }
+
+        public Task<T> UpdateLeaveRequestAdminAsync<T>(LeaveRequestUpdateDTO leaveRequest)
+        {
+            throw new NotImplementedException();
         }
     }
 }

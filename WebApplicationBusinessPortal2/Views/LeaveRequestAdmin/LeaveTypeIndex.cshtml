@@ -1,0 +1,74 @@
+﻿@model IEnumerable<BusinessPortal2.Models.DTO.LeaveTypeDTO.LeaveTypeReadDTO>
+
+@{
+    ViewData["Title"] = "LeaveTypeIndex";
+}
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Bussiness Portal</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Access" asp-action="Logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<h1>LeaveTypeIndex</h1>
+
+<p>
+    <a asp-action="CreateLeave">Create New Leave</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveDays)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LeaveName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LeaveDays)
+            </td>
+                <td>
+                        <a asp-action="Update"  asp-route-id="@item.Id">
+                            Update <i class="fa fa-edit"></i>
+                        </a>
+
+                                <a asp-action="Delete" asp-route-id="@item.Id">
+                    Delete <i class="fa fa-trash"></i>
+                        </a>
+            </td>
+        </tr>
+}
+        
+    </tbody>
+    
+</table>
+<div>
+    <a asp-action="AdminIndex">Back to List</a>
+</div>

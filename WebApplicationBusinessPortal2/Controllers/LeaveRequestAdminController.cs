@@ -57,6 +57,21 @@ namespace WebApplicationBusinessPortal2.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> LeaveTypeIndex()
+        {
+
+            List<LeaveTypeReadDTO> list = new List<LeaveTypeReadDTO>();
+
+            var response = await _leaveRequestAdminService.GetLeaveTypeAsync<AppResponse>();
+
+            if (response.IsSuccess)
+            {
+                list = JsonConvert.DeserializeObject<List<LeaveTypeReadDTO>>(response.Result.ToString());
+            }
+            return View(list);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Approved()
         {
 
@@ -137,7 +152,7 @@ namespace WebApplicationBusinessPortal2.Controllers
                 var response = await _leaveRequestAdminService.CreateLeaveRequestAdminAsync<AppResponse>(Dto);
                 if (response != null && response.IsSuccess)
                 {
-                    return RedirectToAction(nameof(AdminIndex));
+                    return RedirectToAction(nameof(LeaveTypeIndex));
                 }
             }
 
@@ -152,6 +167,13 @@ namespace WebApplicationBusinessPortal2.Controllers
             
         }
 
+        public async Task<IActionResult> DeleteLeave(int Id)
+        {
+            var response = await _leaveRequestAdminService.DeleteLeaveTypeAsync<AppResponse>(Id);
+
+            return RedirectToAction(nameof(LeaveTypeIndex));
+
+        }
         [HttpGet]
         public async Task<IActionResult> Update(int Id)
         {
