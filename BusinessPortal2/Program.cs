@@ -47,7 +47,7 @@ namespace BusinessPortal2
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
             builder.Services.AddDbContext<PersonaldataContext>(options => options
-            .UseSqlServer(builder.Configuration.GetConnectionString("ConnectionDamir")));
+            .UseSqlServer(builder.Configuration.GetConnectionString("ConnectionFilip")));
             //.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionMaxLaptop")));
 
             var app = builder.Build();

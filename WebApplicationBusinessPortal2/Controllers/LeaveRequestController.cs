@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using WebApplicationBusinessPortal2.Models;
 using WebApplicationBusinessPortal2.Models.ViewModels;
@@ -29,7 +30,7 @@ namespace WebApplicationBusinessPortal2.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            int personalId = 1;
+            int personalId = GetUserIdFromToken();
             List<LeaveRequestReadDTO> leaveRequests = new List<LeaveRequestReadDTO>();
             var response = await _leaveRequestService.GetLeaveRequestAsync<AppResponse>(personalId);
             if (response.IsSuccess)
@@ -77,11 +78,18 @@ namespace WebApplicationBusinessPortal2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _leaveRequestService.CreateLeaveRequestAsync<AppResponse>(leaveRequestToCreate);
-                if (response.IsSuccess)
+                int PersonalId = GetUserIdFromToken();
+
+                if (PersonalId != 0)
                 {
-                    return RedirectToAction(nameof(Index));
+                    leaveRequestToCreate.PersonalId = PersonalId;
+                    var response = await _leaveRequestService.CreateLeaveRequestAsync<AppResponse>(leaveRequestToCreate);
+                    if (response.IsSuccess)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
+
             }
             return View(leaveRequestToCreate);
         }
@@ -113,6 +121,24 @@ namespace WebApplicationBusinessPortal2.Controllers
                 }
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        public int GetUserIdFromToken()
+        {
+            string tokenFromCookie = Request.Cookies["AuthToken"];
+
+            if (tokenFromCookie != null)
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(tokenFromCookie);
+                var rolesClaim = token.Claims.FirstOrDefault(claim => claim.Type == "id");
+
+                if (rolesClaim != null)
+                {
+                    return int.Parse(rolesClaim.Value);
+                }
+            }
+            return 0;
         }
 
     }
