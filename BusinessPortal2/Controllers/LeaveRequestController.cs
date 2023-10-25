@@ -4,6 +4,8 @@ using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace BusinessPortal2.Controllers
 {
@@ -59,10 +61,9 @@ namespace BusinessPortal2.Controllers
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
 
-            if(leaveRequestCreateDTO != null)
+            if (leaveRequestCreateDTO != null)
             {
                 leaveRequestCreateDTO.ApprovalState = "Pending";
-                leaveRequestCreateDTO.PersonalId = 1;
                 await _leaveRequestRepo.CreateLeaveRequest(_mapper.Map<LeaveRequest>(leaveRequestCreateDTO));
                 response.Result = leaveRequestCreateDTO;
                 response.isSuccess = true;
