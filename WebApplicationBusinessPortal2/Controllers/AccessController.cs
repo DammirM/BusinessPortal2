@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NuGet.Common;
+using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using WebApplicationBusinessPortal2.Models;
 using WebApplicationBusinessPortal2.Services;
 
@@ -37,8 +40,7 @@ namespace WebApplicationBusinessPortal2.Controllers
                 {
                     return RedirectToAction(nameof(Login));
                 }
-
-                if (response.ErrorMessages != null && response.ErrorMessages.Count > 0)
+                else if (response.ErrorMessages != null && response.ErrorMessages.Count > 0)
                 {
                     foreach (var errorMessage in response.ErrorMessages)
                     {
@@ -63,9 +65,41 @@ namespace WebApplicationBusinessPortal2.Controllers
             if (response != null && response.IsSuccess)
             {
                 CreateCookie(response.Result.ToString());
-                return RedirectToAction(nameof(Login));
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(response.Result.ToString());
+
+                var rolesClaim = token.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role);
+
+                if (rolesClaim != null)
+                {
+                    string role = rolesClaim.Value;
+
+                    if (role == "user")
+                    {
+                        return RedirectToAction(nameof(HomeController.Index));
+                    }
+                    else if (role == "admin")
+                    {
+                        return RedirectToAction(nameof(Register));
+                    }
+                }
+
+                else if (response.ErrorMessages != null && response.ErrorMessages.Count > 0)
+                {
+                    foreach (var errorMessage in response.ErrorMessages)
+                    {
+                        ModelState.AddModelError(string.Empty, errorMessage);
+                    }
+                }
             }
             return View();
+        }
+
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("AuthToken");
+            return RedirectToAction(nameof(Login));
         }
 
         public void CreateCookie(string token)
@@ -73,8 +107,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             var cookieOptions = new CookieOptions
             {
                 Expires = DateTime.Now.AddHours(1),
-                HttpOnly = true,
-                Secure = true
+                HttpOnly = false,
             };
 
             Response.Cookies.Append("AuthToken", token, cookieOptions);
