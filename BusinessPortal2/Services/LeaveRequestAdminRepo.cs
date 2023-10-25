@@ -11,10 +11,10 @@ namespace BusinessPortal2.Services
         {
             _context = context;
         }
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Delete(int Id)
         {
             var requestToDelete = await _context.leaveRequests
-                .FirstOrDefaultAsync(leaveRequest => leaveRequest.Id == id);
+                .FirstOrDefaultAsync(leaveRequest => leaveRequest.Id == Id);
             if (requestToDelete != null)
             {
                 _context.Remove(requestToDelete);

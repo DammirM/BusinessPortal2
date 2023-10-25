@@ -8,7 +8,7 @@ namespace BusinessPortal2.Models
         public int Id { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public DateTime DateRequest { get; set; }
+        public DateTime DateRequest { get; set; } = DateTime.Now;
         public string ApprovalState { get; set; }
 
         public int LeaveTypeId { get; set; }

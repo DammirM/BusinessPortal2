@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
-using BusinessPortal2.Models.DTO.LeaveRequestDTO.LeaveRequestDTO;
+using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Services;
 using Microsoft.AspNetCore.Mvc;
 using BusinessPortal2.Models;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace BusinessPortal2.Controllers
 {
@@ -107,20 +108,21 @@ namespace BusinessPortal2.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteLeaveRequest(int id)
+        public async Task<IActionResult> DeleteLeaveRequest(int Id)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
 
-            var isDeleted = await _leaveRequestAdminRepo.Delete(id);
+            var isDeleted = await _leaveRequestAdminRepo.Delete(Id);
             if (isDeleted)
             {
+                response.Result = isDeleted;
                 response.isSuccess = true;
-                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.StatusCode = System.Net.HttpStatusCode.NoContent;
 
                 return Ok(response);
             }
 
-            return BadRequest(response);
+            return BadRequest("Not Found");
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BusinessPortal2.Models;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
-using BusinessPortal2.Models.DTO.LeaveRequestDTO.LeaveRequestDTO;
 using BusinessPortal2.Models.DTO.LeaveTypeDTO;
 using BusinessPortal2.Models.DTO.PersonalDTO;
 
@@ -27,7 +26,7 @@ namespace BusinessPortal2
             CreateMap<LeaveRequest, LeaveRequestReadDTO>();
             CreateMap<LeaveRequest, LeaveRequestReadAdminDTO>();
             CreateMap<LeaveRequestCreateDTO, LeaveRequest>();
-            CreateMap<LeaveRequestUpdateDTO, LeaveRequest>();
+            CreateMap<LeaveRequestUpdateDTO, LeaveRequest>().ReverseMap();
         }
     }
 }
