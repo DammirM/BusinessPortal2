@@ -1,7 +1,6 @@
 ﻿using Azure;
 using BusinessPortal2.Models;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
-using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Models.DTO.LeaveTypeDTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Connections;

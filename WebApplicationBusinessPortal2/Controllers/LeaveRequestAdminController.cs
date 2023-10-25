@@ -5,6 +5,7 @@ using BusinessPortal2.Models.DTO.PersonalDTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using WebApplicationBusinessPortal2.Models;
 using WebApplicationBusinessPortal2.Services;
 
@@ -144,15 +145,16 @@ namespace WebApplicationBusinessPortal2.Controllers
         }
 
         [HttpPost]
-
         public async Task<IActionResult> Create([FromForm] LeaveRequestCreateDTO Dto)
         {
+            Dto.PersonalId = GetUserIdFromToken();
+
             if (ModelState.IsValid)
             {
                 var response = await _leaveRequestAdminService.CreateLeaveRequestAdminAsync<AppResponse>(Dto);
                 if (response != null && response.IsSuccess)
                 {
-                    return RedirectToAction(nameof(LeaveTypeIndex));
+                    return RedirectToAction(nameof(AdminIndex));
                 }
             }
 
@@ -308,6 +310,24 @@ namespace WebApplicationBusinessPortal2.Controllers
                 }
             }
             return View(PersonalDTO);
+        }
+
+        public int GetUserIdFromToken()
+        {
+            string tokenFromCookie = Request.Cookies["AuthToken"];
+
+            if (tokenFromCookie != null)
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(tokenFromCookie);
+                var rolesClaim = token.Claims.FirstOrDefault(claim => claim.Type == "id");
+
+                if (rolesClaim != null)
+                {
+                    return int.Parse(rolesClaim.Value);
+                }
+            }
+            return 0;
         }
     }
 }
