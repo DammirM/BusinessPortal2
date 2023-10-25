@@ -1,6 +1,7 @@
 ﻿using BusinessPortal2.Models;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Models.DTO.LeaveTypeDTO;
+using BusinessPortal2.Models.DTO.PersonalDTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -39,6 +40,73 @@ namespace WebApplicationBusinessPortal2.Controllers
             }
             return View(list);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> PersonalIndex()
+        {
+
+            List<PersonalReadDTO> list = new List<PersonalReadDTO>();
+
+            var response = await _leaveRequestAdminService.GetPersonalAdminAsync<AppResponse>();
+
+            if (response.IsSuccess)
+            {
+                list = JsonConvert.DeserializeObject<List<PersonalReadDTO>>(response.Result.ToString());
+            }
+            return View(list);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Approved()
+        {
+
+            List<LeaveRequestReadAdminDTO> approvedRequests = new List<LeaveRequestReadAdminDTO>();
+
+            var response = await _leaveRequestAdminService.GetLeaveRequestAdminAsync<AppResponse>();
+
+            if (response.IsSuccess)
+            {
+                List<LeaveRequestReadAdminDTO> allRequests = JsonConvert.DeserializeObject<List<LeaveRequestReadAdminDTO>>(response.Result.ToString());
+
+                approvedRequests = allRequests.Where(request => request.ApprovalState == "Approved").ToList();
+            }
+            return View(approvedRequests);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Rejected()
+        {
+
+            List<LeaveRequestReadAdminDTO> approvedRequests = new List<LeaveRequestReadAdminDTO>();
+
+            var response = await _leaveRequestAdminService.GetLeaveRequestAdminAsync<AppResponse>();
+
+            if (response.IsSuccess)
+            {
+                List<LeaveRequestReadAdminDTO> allRequests = JsonConvert.DeserializeObject<List<LeaveRequestReadAdminDTO>>(response.Result.ToString());
+
+                approvedRequests = allRequests.Where(request => request.ApprovalState == "Rejected").ToList();
+            }
+            return View(approvedRequests);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Pending()
+        {
+
+            List<LeaveRequestReadAdminDTO> approvedRequests = new List<LeaveRequestReadAdminDTO>();
+
+            var response = await _leaveRequestAdminService.GetLeaveRequestAdminAsync<AppResponse>();
+
+            if (response.IsSuccess)
+            {
+                List<LeaveRequestReadAdminDTO> allRequests = JsonConvert.DeserializeObject<List<LeaveRequestReadAdminDTO>>(response.Result.ToString());
+
+                approvedRequests = allRequests.Where(request => request.ApprovalState == "Pending").ToList();
+            }
+            return View(approvedRequests);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> Create()
@@ -87,6 +155,8 @@ namespace WebApplicationBusinessPortal2.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int Id)
         {
+
+
             var response = await _leaveRequestAdminService.GetLeaveRequestByIdAdminAsync<AppResponse>(Id);
 
             if (response != null && response.IsSuccess)
@@ -99,7 +169,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             new SelectListItem { Text = "Pending", Value = "Pending" },
             new SelectListItem { Text = "Rejected", Value = "Rejected" },
             new SelectListItem { Text = "Approved", Value = "Approved" }
-        }, "Value", "Text");
+            }, "Value", "Text");
 
                 return View(model);
             }
@@ -124,7 +194,24 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(leaveRequest);
         }
 
+        public async Task<IActionResult> CreateLeave()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateLeave(LeaveTypeCreateDTO leaveDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _leaveRequestAdminService.CreateLeveType<AppResponse>(leaveDTO);
+                if (response != null && response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(AdminIndex));
+                }
+            }
+            return View(leaveDTO);
+        }
 
     }
 }
