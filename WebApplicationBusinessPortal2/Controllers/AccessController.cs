@@ -77,11 +77,11 @@ namespace WebApplicationBusinessPortal2.Controllers
 
                     if (role == "user")
                     {
-                        return RedirectToAction(nameof(HomeController.Index));
+                        return RedirectToAction("Index", "LeaveRequest");
                     }
                     else if (role == "admin")
                     {
-                        return RedirectToAction(nameof(Register));
+                        return RedirectToAction("AdminIndex", "LeaveRequestAdmin");
                     }
                 }
 
