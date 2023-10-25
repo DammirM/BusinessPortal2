@@ -2,6 +2,7 @@
 using static WebApplicationBusinessPortal2.Models.ConfigurationModels.ApiSettings;
 using WebApplicationBusinessPortal2.Models;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
+using BusinessPortal2.Models.DTO.LeaveTypeDTO;
 
 namespace WebApplicationBusinessPortal2.Services
 {
@@ -22,6 +23,17 @@ namespace WebApplicationBusinessPortal2.Services
                 ApiType = ApiType.POST,
                 Data = leaveRequest,
                 Url = _httpClientService.Client.BaseAddress + "admin/leaverequest/create",
+                AccessToken = ""
+            });
+        }
+
+        public async Task<T> CreateLeveType<T>(LeaveTypeCreateDTO leaveDTO)
+        {
+            return await SendAsync<T>(new ApiRequest
+            {
+                ApiType = ApiType.POST,
+                Data = leaveDTO,
+                Url = _httpClientService.Client.BaseAddress + "leavetypes/create",
                 AccessToken = ""
             });
         }
@@ -52,6 +64,16 @@ namespace WebApplicationBusinessPortal2.Services
             {
                 ApiType = ApiType.GET,
                 Url = _httpClientService.Client.BaseAddress + $"admin/leaverequest/get/{Id}",
+                AccessToken = ""
+            });
+        }
+
+        public async Task<T> GetPersonalAdminAsync<T>()
+        {
+            return await SendAsync<T>(new ApiRequest
+            {
+                ApiType = ApiType.GET,
+                Url = _httpClientService.Client.BaseAddress + $"personal/getall",
                 AccessToken = ""
             });
         }

@@ -1,31 +1,11 @@
 ﻿@model IEnumerable<BusinessPortal2.Models.DTO.LeaveRequestDTO.LeaveRequestReadAdminDTO>
 
 @{
-    ViewData["Title"] = "AdminIndex";
+    ViewData["Title"] = "Rejected";
 }
 
-<h1>AdminIndex</h1>
+<h1>Rejected</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<p>
-    <a asp-action="Approved">Approved Requests</a>            
-    <a asp-action="Rejected">Rejected Requests</a>             
-    <a asp-action="Pending">Pending Requests</a>
-    
-</p>
-<div class="row">
-    <div class="col-md-12">
-        <p>Total Requests: @Model.Count()</p>
-    </div>
-</div>
-<p>
-    <a asp-action="CreateLeave">Create Leave</a>
-</p>
-<p>
-    <a asp-action="PersonalIndex">PersonalView</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -50,9 +30,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.ApprovalState)
             </th>
-           
-            
-            
             <th></th>
         </tr>
     </thead>
@@ -64,10 +41,10 @@
             </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.personal.FullName)
-                </td>
-                <td>
+                    </td>
+                    <td>
                     @Html.DisplayFor(modelItem => item.leaveType.LeaveName)
-                </td>
+                    </td>
             <td>
                 @Html.DisplayFor(modelItem => item.StartDate)
             </td>
@@ -77,22 +54,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.DateRequest)
             </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ApprovalState)
-                </td>
-            
-            
-            
-                <td>
-                    <a asp-action="Update"  asp-route-id="@item.Id">
-                        Update <i class="fa fa-edit"></i>
-                    </a>
-                
-                    <a asp-action="Delete" asp-route-id="@item.Id">
-                        Delete <i class="fa fa-trash"></i>
-                    </a>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApprovalState)
             </td>
         </tr>
 }
+        <div>
+            <a asp-action="AdminIndex">Back to List</a>
+        </div>
     </tbody>
 </table>
