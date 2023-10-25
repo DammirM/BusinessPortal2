@@ -1,0 +1,83 @@
+﻿@model IEnumerable<BusinessPortal2.Models.DTO.LeaveRequestDTO.LeaveRequestReadAdminDTO>
+
+@{
+    ViewData["Title"] = "AdminIndex";
+}
+
+<h1>AdminIndex</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.personal.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.leaveType.LeaveName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateRequest)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApprovalState)
+            </th>
+           
+            
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.personal.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.leaveType.LeaveName)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateRequest)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApprovalState)
+                </td>
+            
+            
+            
+                <td>
+                    <a asp-action="Update"  asp-route-id="@item.Id">
+                        Update <i class="fa fa-edit"></i>
+                    </a>
+                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
+                @*@Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
+                    <a asp-action="Delete" asp-route-id="@item.Id">
+                        Delete <i class="fa fa-trash"></i>
+                    </a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

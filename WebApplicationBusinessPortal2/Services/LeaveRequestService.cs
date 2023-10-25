@@ -1,6 +1,6 @@
 ﻿using Azure.Core;
 using BusinessPortal2.Models;
-using BusinessPortal2.Models.DTO.LeaveRequestDTO.LeaveRequestDTO;
+using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using Newtonsoft.Json;
 using System.Security.Policy;
 using System.Text;

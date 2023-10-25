@@ -27,7 +27,8 @@ namespace WebApplicationBusinessPortal2.Services
 
                 if (apiRequest.Data != null)
                 {
-                    httpRequestMessage.Content = new StringContent(JsonConvert.SerializeObject(apiRequest.Data), Encoding.UTF8, "application/json");
+                    httpRequestMessage.Content = new StringContent(JsonConvert.SerializeObject(apiRequest.Data),
+                        Encoding.UTF8, "application/json");
                 }
 
                 switch (apiRequest.ApiType)
@@ -48,6 +49,7 @@ namespace WebApplicationBusinessPortal2.Services
                         httpRequestMessage.Method = HttpMethod.Get;
                         break;
                 }
+
                 HttpResponseMessage response = await _httpClientService.Client.SendAsync(httpRequestMessage);
 
                 var apiResponse = await response.Content.ReadAsStringAsync();
