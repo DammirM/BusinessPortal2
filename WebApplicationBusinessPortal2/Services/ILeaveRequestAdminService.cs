@@ -1,6 +1,7 @@
 ﻿using BusinessPortal2.Models;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Models.DTO.LeaveTypeDTO;
+using BusinessPortal2.Models.DTO.PersonalDTO;
 
 namespace WebApplicationBusinessPortal2.Services
 {
@@ -17,7 +18,9 @@ namespace WebApplicationBusinessPortal2.Services
 
         Task<T> GetLeaveTypeAsync<T>();
 
-        Task<T> UpdateLeaveRequestAdminAsync<T>(LeaveRequestUpdateDTO leaveRequest); // Update
+        Task<T> GetLeaveTypeByIdtAdminAsync<T>(int Id);
+
+        Task<T> UpdateLeaveTypeAdminAsync<T>(LeaveTypeUpdateDTO leaveDTO);
 
         Task<T> CreateLeveType<T>(LeaveTypeCreateDTO leaveDTO);
 
@@ -27,5 +30,11 @@ namespace WebApplicationBusinessPortal2.Services
         // GETALL PERSONAL
 
         Task<T> GetPersonalAdminAsync<T>();
+
+        Task<T> GetPersonalByIdAdminAsync<T>(int Id);
+
+        Task<T> UpdatePersonalAdminAsync<T>(PersonalUpdateDTO leaveRequest);
+
+        Task<T> DeletePersonalAsync<T>(int Id);
     }
 }

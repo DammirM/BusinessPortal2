@@ -169,11 +169,13 @@ namespace WebApplicationBusinessPortal2.Controllers
 
         public async Task<IActionResult> DeleteLeave(int Id)
         {
+
             var response = await _leaveRequestAdminService.DeleteLeaveTypeAsync<AppResponse>(Id);
 
             return RedirectToAction(nameof(LeaveTypeIndex));
 
         }
+
         [HttpGet]
         public async Task<IActionResult> Update(int Id)
         {
@@ -198,8 +200,6 @@ namespace WebApplicationBusinessPortal2.Controllers
 
             return NotFound();
         }
-
-
         [HttpPost]
         public async Task<IActionResult> Update(LeaveRequestUpdateDTO leaveRequest)
         {
@@ -216,6 +216,39 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(leaveRequest);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> UpdateLeave(int Id)
+        {
+
+            var response = await _leaveRequestAdminService.GetLeaveTypeByIdtAdminAsync<AppResponse>(Id);
+
+            if (response != null && response.IsSuccess)
+            {
+                LeaveTypeUpdateDTO model = JsonConvert.DeserializeObject<LeaveTypeUpdateDTO>(Convert.ToString(response.Result));
+
+                return View(model);
+            }
+
+            return NotFound();
+        }
+
+        
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateLeave(LeaveTypeUpdateDTO leaveDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _leaveRequestAdminService.UpdateLeaveTypeAdminAsync<AppResponse>(leaveDTO);
+
+                if (response != null && response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(LeaveTypeIndex));
+                }
+            }
+
+            return View(leaveDTO);
+        }
         public async Task<IActionResult> CreateLeave()
         {
             return View();
@@ -229,11 +262,52 @@ namespace WebApplicationBusinessPortal2.Controllers
                 var response = await _leaveRequestAdminService.CreateLeveType<AppResponse>(leaveDTO);
                 if (response != null && response.IsSuccess)
                 {
-                    return RedirectToAction(nameof(AdminIndex));
+                    return RedirectToAction(nameof(LeaveTypeIndex));
                 }
             }
             return View(leaveDTO);
         }
 
+        public async Task<IActionResult> DeletePersonal(int Id)
+        {
+
+            var response = await _leaveRequestAdminService.DeletePersonalAsync<AppResponse>(Id);
+
+            return RedirectToAction(nameof(PersonalIndex));
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdatePersonal(int Id)
+        {
+
+            var response = await _leaveRequestAdminService.GetPersonalByIdAdminAsync<AppResponse>(Id);
+
+            if (response != null && response.IsSuccess)
+            {
+                PersonalUpdateDTO model = JsonConvert.DeserializeObject<PersonalUpdateDTO>(Convert.ToString(response.Result));
+
+                return View(model);
+            }
+
+            return NotFound();
+        }
+
+
+
+        public async Task<IActionResult> UpdatePersonal(PersonalUpdateDTO PersonalDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _leaveRequestAdminService.UpdatePersonalAdminAsync<AppResponse>(PersonalDTO);
+
+                if (response != null && response.IsSuccess)
+                {
+
+                    return RedirectToAction(nameof(PersonalIndex));
+                }
+            }
+            return View(PersonalDTO);
+        }
     }
 }

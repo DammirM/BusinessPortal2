@@ -154,7 +154,7 @@ namespace BusinessPortal2.Controllers
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdatePersonal([FromBody] PersonalUpdateDTO p_Update_DTO, [FromServices] IMapper _mapper,
-            [FromServices] IValidator<PersonalUpdateDTO> _validate)
+    [FromServices] IValidator<PersonalUpdateDTO> _validate)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
 
@@ -176,13 +176,16 @@ namespace BusinessPortal2.Controllers
                 return BadRequest(response);
             }
 
-            await repo.UpdatePersonal(_mapper.Map<Personal>(personalToUpdate));
+            _mapper.Map(p_Update_DTO, personalToUpdate);
+
+            await repo.UpdatePersonal(personalToUpdate);
 
             response.Result = p_Update_DTO;
             response.isSuccess = true;
             response.StatusCode = System.Net.HttpStatusCode.OK;
             return Ok(response);
         }
+
 
         [HttpDelete("delete/{personalId}")]
         public async Task<IActionResult> PersonalDelete(int personalId)
