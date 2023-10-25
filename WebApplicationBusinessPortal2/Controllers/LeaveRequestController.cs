@@ -15,22 +15,17 @@ using WebApplicationBusinessPortal2.Services;
 
 namespace WebApplicationBusinessPortal2.Controllers
 {
-    [Route("LeaveRequest")]
-    [ApiController]
     public class LeaveRequestController : Controller
     {
-        private readonly IHttpClientService _httpClientService;
         private readonly ILeaveRequestService _leaveRequestService;
         private readonly IGetSelectListService _getSelectListService;
 
-        public LeaveRequestController(IHttpClientService httpClientService, ILeaveRequestService leaveRequestService, IGetSelectListService getSelectListService)
+        public LeaveRequestController(ILeaveRequestService leaveRequestService, IGetSelectListService getSelectListService)
         {
-            _httpClientService = httpClientService;
             _leaveRequestService = leaveRequestService;
             _getSelectListService = getSelectListService;
         }
 
-        // GET: LeaveRequestController
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -44,24 +39,19 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(leaveRequests);
         }
 
-        // GET: LeaveRequestController/Details/5
-        [HttpGet("{leaveRequestId}", Name = "Details")]
+        [HttpGet]
         public async Task<IActionResult> Details(int leaveRequestId)
         {
             LeaveRequestReadDTO leaveRequest = new LeaveRequestReadDTO();
-            HttpResponseMessage responseMessage = _httpClientService.Client
-                .GetAsync(_httpClientService.Client.BaseAddress + "user/leaverequest/get/" + leaveRequestId).Result;
-
-            if (responseMessage.IsSuccessStatusCode)
+            var response = await _leaveRequestService.GetLeaveRequestByIdAsync<AppResponse>(1, leaveRequestId);
+            if (response.IsSuccess)
             {
-                string data = responseMessage.Content.ReadAsStringAsync().Result;
-                leaveRequest = JsonConvert.DeserializeObject<LeaveRequestReadDTO>(data);
+                leaveRequest = JsonConvert.DeserializeObject<LeaveRequestReadDTO>(response.Result.ToString());
             }
             return View(leaveRequest);
         }
 
-        // GET: LeaveRequestController/Create
-        [HttpGet("Create", Name = "Create")]
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             List<SelectListItem> leaveTypeSelectList = new List<SelectListItem>();
@@ -81,8 +71,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View();
         }
 
-        // POST: LeaveRequestController/Create
-        [HttpPost("Create", Name = "Create")]
+        [HttpPost]
         [ValidateAntiForgeryToken]  
         public async Task<IActionResult> Create([FromForm] LeaveRequestCreateDTO leaveRequestToCreate)
         {
@@ -97,16 +86,28 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(leaveRequestToCreate);
         }
 
-        // POST: LeaveRequestController/Delete/5
-        [HttpDelete("{leaveRequestId}")]
+        [HttpGet]
+        public async Task<IActionResult> Delete(int leaveRequestId)
+        {
+            int personalId = 1;
+            LeaveRequestReadDTO leaveRequest = new LeaveRequestReadDTO();
+            var response = await _leaveRequestService.GetLeaveRequestByIdAsync<AppResponse>(personalId, leaveRequestId);
+            if (response.IsSuccess)
+            {
+                leaveRequest = JsonConvert.DeserializeObject<LeaveRequestReadDTO>(response.Result.ToString());
+            }
+            return View(leaveRequest);
+        }
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int leaveRequestId, int personalId)
+        public async Task<IActionResult> Delete([FromForm]LeaveRequestReadDTO leaveRequestRead)
         {
             if (ModelState.IsValid)
             {
-                HttpResponseMessage responseMessage = _httpClientService.Client
-                    .DeleteAsync(_httpClientService.Client.BaseAddress + "user/leaverequest/delete/" + leaveRequestId).Result;
-                if (responseMessage.IsSuccessStatusCode)
+                int personalId = 1;
+                var response = await _leaveRequestService.DeleteLeaveRequestAsync<AppResponse>(personalId, leaveRequestRead.Id);
+                if (response.IsSuccess)
                 {
                     return RedirectToAction(nameof(Index));
                 }
