@@ -7,6 +7,8 @@ using WebApplicationBusinessPortal2.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//builder.Services.AddTransient<IEmailSender, EmailSenderService>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
