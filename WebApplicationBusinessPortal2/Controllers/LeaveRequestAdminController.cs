@@ -179,7 +179,7 @@ namespace WebApplicationBusinessPortal2.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Update(int Id)
+        public async Task<IActionResult> Update(int Id, int pid, int lid)
         {
 
 
@@ -187,15 +187,17 @@ namespace WebApplicationBusinessPortal2.Controllers
 
             if (response != null && response.IsSuccess)
             {
+
+                
                 LeaveRequestUpdateDTO model = JsonConvert.DeserializeObject<LeaveRequestUpdateDTO>(Convert.ToString(response.Result));
 
                 // Populate the ViewBag with ApprovalState options
                 ViewBag.ApprovalStateOptions = new SelectList(new[]
                 {
-            new SelectListItem { Text = "Pending", Value = "Pending" },
-            new SelectListItem { Text = "Rejected", Value = "Rejected" },
-            new SelectListItem { Text = "Approved", Value = "Approved" }
-            }, "Value", "Text");
+                new SelectListItem { Text = "Pending", Value = "Pending" },
+                new SelectListItem { Text = "Rejected", Value = "Rejected" },
+                new SelectListItem { Text = "Approved", Value = "Approved" }
+                }, "Value", "Text");
 
                 return View(model);
             }
@@ -209,8 +211,11 @@ namespace WebApplicationBusinessPortal2.Controllers
             {
                 var response = await _leaveRequestAdminService.UpdateLeaveRequesAdminAsync<AppResponse>(leaveRequest);
 
+
                 if (response != null && response.IsSuccess)
                 {
+                   
+
                     return RedirectToAction(nameof(AdminIndex));
                 }
             }
