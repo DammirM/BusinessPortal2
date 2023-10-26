@@ -128,7 +128,6 @@ namespace BusinessPortal2.Controllers
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-            // Additional claims
             claims.Add(new Claim("id", user.Id.ToString()));
             claims.Add(new Claim("email", user.Email));
             if (user.isAdmin)
@@ -141,8 +140,8 @@ namespace BusinessPortal2.Controllers
             }
 
             var token = new JwtSecurityToken(
-                issuer: "YourIssuer",    // Change this to your issuer
-                audience: "YourAudience",  // Change this to your audience
+                issuer: "YourIssuer",    
+                audience: "YourAudience",  
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(1), 
                 signingCredentials: credentials
@@ -150,7 +149,6 @@ namespace BusinessPortal2.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdatePersonal([FromBody] PersonalUpdateDTO p_Update_DTO, [FromServices] IMapper _mapper,
@@ -185,7 +183,6 @@ namespace BusinessPortal2.Controllers
             response.StatusCode = System.Net.HttpStatusCode.OK;
             return Ok(response);
         }
-
 
         [HttpDelete("delete/{personalId}")]
         public async Task<IActionResult> PersonalDelete(int personalId)

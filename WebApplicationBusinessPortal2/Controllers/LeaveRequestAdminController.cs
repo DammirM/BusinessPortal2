@@ -2,6 +2,7 @@
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Models.DTO.LeaveTypeDTO;
 using BusinessPortal2.Models.DTO.PersonalDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -27,6 +28,7 @@ namespace WebApplicationBusinessPortal2.Controllers
 
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> AdminIndex()
         {
@@ -42,6 +44,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> PersonalIndex()
         {
@@ -57,6 +60,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> LeaveTypeIndex()
         {
@@ -72,6 +76,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> Approved()
         {
@@ -89,6 +94,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(approvedRequests);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> Rejected()
         {
@@ -106,6 +112,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(approvedRequests);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> Pending()
         {
@@ -123,7 +130,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(approvedRequests);
         }
 
-
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -144,6 +151,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] LeaveRequestCreateDTO Dto)
         {
@@ -161,6 +169,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(Dto);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task <IActionResult> Delete(int Id)
         {
             var response = await _leaveRequestAdminService.DeleteLeaveRequestAdminAsync<AppResponse>(Id);
@@ -169,6 +178,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteLeave(int Id)
         {
 
@@ -178,6 +188,7 @@ namespace WebApplicationBusinessPortal2.Controllers
 
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> Update(int Id, int pid, int lid)
         {
@@ -204,6 +215,8 @@ namespace WebApplicationBusinessPortal2.Controllers
 
             return NotFound();
         }
+
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Update(LeaveRequestUpdateDTO leaveRequest)
         {
@@ -223,6 +236,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(leaveRequest);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> UpdateLeave(int Id)
         {
@@ -239,8 +253,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return NotFound();
         }
 
-        
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> UpdateLeave(LeaveTypeUpdateDTO leaveDTO)
         {
@@ -256,11 +269,14 @@ namespace WebApplicationBusinessPortal2.Controllers
 
             return View(leaveDTO);
         }
+
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateLeave()
         {
             return View();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> CreateLeave(LeaveTypeCreateDTO leaveDTO)
         {
@@ -275,6 +291,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(leaveDTO);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeletePersonal(int Id)
         {
 
@@ -284,6 +301,7 @@ namespace WebApplicationBusinessPortal2.Controllers
 
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> UpdatePersonal(int Id)
         {
@@ -300,8 +318,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return NotFound();
         }
 
-
-
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdatePersonal(PersonalUpdateDTO PersonalDTO)
         {
             if (ModelState.IsValid)
@@ -317,6 +334,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(PersonalDTO);
         }
 
+        [Authorize(Roles = "admin")]
         public int GetUserIdFromToken()
         {
             string tokenFromCookie = Request.Cookies["AuthToken"];

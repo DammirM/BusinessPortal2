@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebApplicationBusinessPortal2.Models.ConfigurationModels;
@@ -20,6 +21,10 @@ builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddScoped<ILeaveRequestAdminService, LeaveRequestAdminService>();
 builder.Services.AddScoped<IGetSelectListService, GetSelectListService>();
 builder.Services.AddScoped<IAccessService, AccessService>();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = "https://localhost:7259//Access/Login"; 
+});
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

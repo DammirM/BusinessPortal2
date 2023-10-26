@@ -2,6 +2,7 @@
 using BusinessPortal2.Models;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Models.DTO.LeaveTypeDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             _getSelectListService = getSelectListService;
         }
 
+        [Authorize(Roles = "user")]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -39,6 +41,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(leaveRequests);
         }
 
+        [Authorize(Roles = "user")]
         [HttpGet]
         public async Task<IActionResult> Details(int leaveRequestId)
         {
@@ -51,6 +54,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(leaveRequest);
         }
 
+        [Authorize(Roles = "user")]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -71,6 +75,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View();
         }
 
+        [Authorize(Roles = "user")]
         [HttpPost]
         [ValidateAntiForgeryToken]  
         public async Task<IActionResult> Create([FromForm] LeaveRequestCreateDTO leaveRequestToCreate)
@@ -93,6 +98,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(leaveRequestToCreate);
         }
 
+        [Authorize(Roles = "user")]
         [HttpGet]
         public async Task<IActionResult> Delete(int leaveRequestId)
         {
@@ -106,6 +112,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return View(leaveRequest);
         }
 
+        [Authorize(Roles = "user")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete([FromForm]LeaveRequestReadDTO leaveRequestRead)
@@ -122,6 +129,7 @@ namespace WebApplicationBusinessPortal2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "user")]
         public int GetUserIdFromToken()
         {
             string tokenFromCookie = Request.Cookies["AuthToken"];
