@@ -18,13 +18,15 @@ namespace WebApplicationBusinessPortal2.Controllers
 {
     public class LeaveRequestController : Controller
     {
+        private readonly ILeaveTypeService _leaveTypeService;
         private readonly ILeaveRequestService _leaveRequestService;
         private readonly IGetSelectListService _getSelectListService;
 
-        public LeaveRequestController(ILeaveRequestService leaveRequestService, IGetSelectListService getSelectListService)
+        public LeaveRequestController(ILeaveRequestService leaveRequestService, IGetSelectListService getSelectListService, ILeaveTypeService leaveTypeService)
         {
-            _leaveRequestService = leaveRequestService;
-            _getSelectListService = getSelectListService;
+            this._leaveRequestService = leaveRequestService;
+            this._getSelectListService = getSelectListService;
+            this._leaveTypeService = leaveTypeService;
         }
 
         [Authorize(Roles = "user")]
@@ -89,7 +91,7 @@ namespace WebApplicationBusinessPortal2.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int leaveRequestId)
         {
-            int personalId = 1;
+            int personalId = GetUserIdFromToken();
             LeaveRequestReadDTO leaveRequest = new LeaveRequestReadDTO();
             var response = await _leaveRequestService.GetLeaveRequestByIdAsync<AppResponse>(personalId, leaveRequestId);
             if (response.IsSuccess)
@@ -106,7 +108,7 @@ namespace WebApplicationBusinessPortal2.Controllers
         {
             if (ModelState.IsValid)
             {
-                int personalId = 1;
+                int personalId = GetUserIdFromToken();
                 var response = await _leaveRequestService.DeleteLeaveRequestAsync<AppResponse>(personalId, leaveRequestRead.Id);
                 if (response.IsSuccess)
                 {
@@ -114,6 +116,21 @@ namespace WebApplicationBusinessPortal2.Controllers
                 }
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "user")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserLeaveTypes()
+        {
+            int personalId = GetUserIdFromToken();
+            List<LeaveTypeReadDTO> personalLeaveTypes = new List<LeaveTypeReadDTO>();
+            var response = await _leaveTypeService.GetAllLeaveRequestByPersonId<AppResponse>(personalId);
+            
+            if (response != null && response.IsSuccess)
+            {
+                personalLeaveTypes = JsonConvert.DeserializeObject<List<LeaveTypeReadDTO>>(response.Result.ToString());
+            }
+            return View(personalLeaveTypes);
         }
 
         [Authorize(Roles = "user")]
@@ -134,6 +151,5 @@ namespace WebApplicationBusinessPortal2.Controllers
             }
             return 0;
         }
-
     }
 }

@@ -18,6 +18,9 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="LeaveRequestAdmin" asp-action="LeaveTypeIndex">LeaveType</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="LeaveRequestAdmin" asp-action="PersonalIndex">All Personal</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Access" asp-action="Logout">Logout</a>
                     </li>
                 </ul>
@@ -27,9 +30,10 @@
 </header>
 
 <h1>Home Admin</h1>
+<br />
 
 <p>
-    <a asp-action="Create">Create Request</a>
+    <a asp-action="Create" class="btn btn-primary">Create Request</a>
 </p>
 
 <p>
@@ -43,9 +47,6 @@
         <p>Total Requests: @Model.Count()</p>
     </div>
 </div>
-<p>
-    <a asp-action="PersonalIndex">List of Personal</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -100,18 +101,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ApprovalState)
                 </td>
-            
-            
-            
                 <td>
-
-                    <a asp-action="Update" asp-route-id="@item.Id" asp-route-personalId="@item.personal.Id" asp-route-leaveTypeId="@item.leaveType.Id">
-                        Update <i class="fa fa-edit"></i>
-                    </a>
-                
-                    <a asp-action="Delete" asp-route-id="@item.Id">
-                        Delete <i class="fa fa-trash"></i>
-                    </a>
+                    <a asp-action="Update" class="btn btn-warning" style="color: white;" asp-route-id="@item.Id" asp-route-personalId="@item.personal.Id" asp-route-leaveTypeId="@item.leaveType.Id"><i class="fa-solid fa-pen-to-square"></i> Update</a>
+                    <a asp-action="Delete" class="btn btn-danger" style="color: white;" asp-route-id="@item.Id"><i class="fa-solid fa-trash"></i> Delete</a>
             </td>
         </tr>
 }
