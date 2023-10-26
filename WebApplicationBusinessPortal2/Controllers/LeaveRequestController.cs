@@ -43,19 +43,6 @@ namespace WebApplicationBusinessPortal2.Controllers
 
         [Authorize(Roles = "user")]
         [HttpGet]
-        public async Task<IActionResult> Details(int leaveRequestId)
-        {
-            LeaveRequestReadDTO leaveRequest = new LeaveRequestReadDTO();
-            var response = await _leaveRequestService.GetLeaveRequestByIdAsync<AppResponse>(1, leaveRequestId);
-            if (response.IsSuccess)
-            {
-                leaveRequest = JsonConvert.DeserializeObject<LeaveRequestReadDTO>(response.Result.ToString());
-            }
-            return View(leaveRequest);
-        }
-
-        [Authorize(Roles = "user")]
-        [HttpGet]
         public async Task<IActionResult> Create()
         {
             List<SelectListItem> leaveTypeSelectList = new List<SelectListItem>();
