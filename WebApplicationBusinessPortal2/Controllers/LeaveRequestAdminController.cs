@@ -190,7 +190,7 @@ namespace WebApplicationBusinessPortal2.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public async Task<IActionResult> Update(int Id, int pid, int lid)
+        public async Task<IActionResult> Update(int Id)
         {
 
 
