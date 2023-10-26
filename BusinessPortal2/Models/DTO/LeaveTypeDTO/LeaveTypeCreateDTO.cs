@@ -8,5 +8,6 @@ namespace BusinessPortal2.Models.DTO.LeaveTypeDTO
         public string LeaveName { get; set; }
         [Required]
         public int LeaveDays { get; set; }
+        public int PersonalId { get; set; }
     }
 }

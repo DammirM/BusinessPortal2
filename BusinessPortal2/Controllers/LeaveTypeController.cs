@@ -58,6 +58,23 @@ namespace BusinessPortal2.Controllers
             return BadRequest(response);
         }
 
+        [HttpGet("get/All/{personalId}")]
+        public async Task<IActionResult> GetAllLeaveByPersonalId(int personalId)
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
+
+            var leaveTypeById = await _leaveTypeRepository.GetAllLeaveTypeByPersonalId(personalId);
+            if (leaveTypeById != null)
+            {
+                response.Result = _mapper.Map<IEnumerable<LeaveTypeReadDTO>>(leaveTypeById);
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> CreateLeaveType(LeaveTypeCreateDTO leaveTypeCreateDTO)
         {
@@ -66,6 +83,23 @@ namespace BusinessPortal2.Controllers
             if (leaveTypeCreateDTO != null)
             {
                 await _leaveTypeRepository.CreateLeaveType(_mapper.Map<LeaveType>(leaveTypeCreateDTO));
+                response.Result = leaveTypeCreateDTO;
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                return Created("Created", response);
+            }
+            response.Errors.Add("LeaveTypeCreateDTO is null");
+            return BadRequest(response);
+        }
+
+        [HttpPost("create/forall")]
+        public async Task<IActionResult> CreateLeaveTypeToAll(LeaveTypeCreateDTO leaveTypeCreateDTO)
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+
+            if (leaveTypeCreateDTO != null)
+            {
+                await _leaveTypeRepository.CreateLeaveTypeForAll(_mapper.Map<LeaveType>(leaveTypeCreateDTO));
                 response.Result = leaveTypeCreateDTO;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
@@ -92,6 +126,24 @@ namespace BusinessPortal2.Controllers
             return BadRequest(response);
         }
 
+        [HttpPut("update/leavename")]
+        public async Task<IActionResult> UpdateLeaveTypeByName(LeaveTypeUpdateDTO leaveTypeUpdateDTO, string name)
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+
+            if (leaveTypeUpdateDTO != null)
+            {
+                await _leaveTypeRepository.UpdateLeaveByNameType(_mapper.Map<LeaveType>(leaveTypeUpdateDTO), name);
+                response.Result = leaveTypeUpdateDTO;
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                return Ok(response);
+            }
+            response.Errors.Add("LeaveTypeUpdateDTO is null");
+
+            return BadRequest(response);
+        }
+
         [HttpDelete("delete/{leaveTypeId}")]
         public async Task<IActionResult> DeleteLeaveType(int leaveTypeId)
         {
@@ -106,6 +158,22 @@ namespace BusinessPortal2.Controllers
                 return Ok(response);
             }
             response.Errors.Add($"LeaveType with id=[{leaveTypeId}] could not be found");
+            return NotFound(response);
+        }
+
+        [HttpDelete("deleteByName/{name}")]
+        public async Task<IActionResult> DeleteLeaveTypeByName(string name)
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+
+            if (name != null)
+            {
+                await _leaveTypeRepository.DeleteLeaveTypeByName(name);
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                return Ok(response);
+            }
+            response.Errors.Add($"LeaveName [{name}] could not be found");
             return NotFound(response);
         }
     }

@@ -22,19 +22,7 @@ namespace BusinessPortal2
             builder.Services.AddControllers();
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(options =>
-            {
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    In = ParameterLocation.Header,
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
-                    BearerFormat = "JWT"
-                });
-
-                options.OperationFilter<SecurityRequirementsOperationFilter>();
-            });
+            builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IPersonalRepo, PersonalRepo>();
             builder.Services.AddScoped<ILeaveTypeRepo, LeaveTypeRepo>();
             builder.Services.AddScoped<ILeaveRequestRepo, LeaveRequestRepo>();
@@ -48,7 +36,7 @@ namespace BusinessPortal2
 
             builder.Services.AddDbContext<PersonaldataContext>(options => options
             //.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionFilip")));
-            .UseSqlServer(builder.Configuration.GetConnectionString("ConnectionFilip")));
+            .UseSqlServer(builder.Configuration.GetConnectionString("Connectiontest")));
             //.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionMaxLaptop")));
 
             var app = builder.Build();
