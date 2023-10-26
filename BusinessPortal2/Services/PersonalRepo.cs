@@ -14,6 +14,42 @@ namespace BusinessPortal2.Services
         {
             this.context = _context;
         }
+
+        
+
+        public async Task CreateLeaveTypeOnRegister(int personalId)
+        {
+
+            var distinctLeaveTypeNames = context.LeaveType.Select(lt => lt.LeaveName).Distinct();
+
+            foreach (var leaveTypeName in distinctLeaveTypeNames)
+            {
+                var leaveType = new LeaveType
+                {
+                    LeaveDays = 25,
+                    LeaveName = leaveTypeName,
+                    PersonalId = personalId
+                };
+
+                context.LeaveType.Add(leaveType);
+            }
+
+           await context.SaveChangesAsync();  
+        }
+
+        public async Task DeleteLeaveTypesPersonal(int personalId)
+        {
+            var delete = context.LeaveType.Where(l => l.PersonalId == personalId);
+
+            foreach (var item in delete)
+            {
+                context.LeaveType.Remove(item);
+                
+            }
+
+            await context.SaveChangesAsync();
+        }
+
         public async Task DeletePersonal(Personal p)
         {
             context.personals.Remove(p);

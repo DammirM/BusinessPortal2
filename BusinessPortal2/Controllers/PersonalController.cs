@@ -85,11 +85,16 @@ namespace BusinessPortal2.Controllers
             }
 
             r_Personal_DTO.Password = BCrypt.Net.BCrypt.HashPassword(r_Personal_DTO.Password);
-            await repo.RegisterPersonal(_mapper.Map<Personal>(r_Personal_DTO));
 
+
+            var newpersonal = await repo.RegisterPersonal(_mapper.Map<Personal>(r_Personal_DTO));
+            
             response.Result = r_Personal_DTO;
             response.isSuccess = true;
             response.StatusCode = System.Net.HttpStatusCode.Created;
+
+           await repo.CreateLeaveTypeOnRegister(newpersonal.Id);
+
 
             return Created("Created", response);
         }
@@ -192,6 +197,8 @@ namespace BusinessPortal2.Controllers
             var personToDelete = await repo.GetPersonalById(personalId);
             if(personToDelete != null)
             {
+               await repo.DeleteLeaveTypesPersonal(personalId);
+
                 await repo.DeletePersonal(personToDelete);
 
                 response.Result = personToDelete;
@@ -204,5 +211,6 @@ namespace BusinessPortal2.Controllers
             response.Errors.Add($"Personal with id=[{personalId}] could not be found");
             return NotFound(response);
         }
+
     }
 }
