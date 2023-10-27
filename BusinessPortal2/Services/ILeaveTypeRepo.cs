@@ -17,5 +17,6 @@ namespace BusinessPortal2.Services
 
         Task<bool> DeleteLeaveType(int leaveTypeId);
         Task<bool> DeleteLeaveTypeByName(string name);
+        Task UpdateLeaveTypeOnApproved(int days, int personalId);
     }
 }

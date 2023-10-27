@@ -33,10 +33,11 @@ namespace BusinessPortal2
 
             // Service for Validation
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+            builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<PersonaldataContext>(options => options
             //.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionFilip")));
-            .UseSqlServer(builder.Configuration.GetConnectionString("Connectiontest")));
+            .UseSqlServer(builder.Configuration.GetConnectionString("ConnectionFilip")));
             //.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionMaxLaptop")));
 
             var app = builder.Build();

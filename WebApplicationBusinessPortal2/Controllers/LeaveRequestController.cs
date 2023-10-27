@@ -54,6 +54,10 @@ namespace WebApplicationBusinessPortal2.Controllers
             {
                 leaveTypes = JsonConvert.DeserializeObject<List<LeaveTypeSimpleReadDTO>>(response.Result.ToString());
 
+                leaveTypes = leaveTypes.GroupBy(x => x.LeaveName)
+                                     .Select(group => group.First())
+                                     .ToList();
+
                 foreach (var leaveType in leaveTypes)
                 {
                     leaveTypeSelectList.Add(new SelectListItem { Text = leaveType.LeaveName, Value = leaveType.Id.ToString() });

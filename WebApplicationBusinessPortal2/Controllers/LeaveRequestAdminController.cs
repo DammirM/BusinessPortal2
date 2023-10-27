@@ -32,16 +32,17 @@ namespace WebApplicationBusinessPortal2.Controllers
         [HttpGet]
         public async Task<IActionResult> AdminIndex()
         {
-
-            List<LeaveRequestReadAdminDTO> list = new List<LeaveRequestReadAdminDTO>();
+            List<LeaveRequestReadAdminDTO> approvedRequests = new List<LeaveRequestReadAdminDTO>();
 
             var response = await _leaveRequestAdminService.GetLeaveRequestAdminAsync<AppResponse>();
 
             if (response.IsSuccess)
             {
-                list = JsonConvert.DeserializeObject<List<LeaveRequestReadAdminDTO>>(response.Result.ToString());
+                List<LeaveRequestReadAdminDTO> allRequests = JsonConvert.DeserializeObject<List<LeaveRequestReadAdminDTO>>(response.Result.ToString());
+
+                approvedRequests = allRequests.Where(request => request.ApprovalState == "Pending").ToList();
             }
-            return View(list);
+            return View(approvedRequests);
         }
 
         [Authorize(Roles = "admin")]
@@ -113,24 +114,6 @@ namespace WebApplicationBusinessPortal2.Controllers
                 List<LeaveRequestReadAdminDTO> allRequests = JsonConvert.DeserializeObject<List<LeaveRequestReadAdminDTO>>(response.Result.ToString());
 
                 approvedRequests = allRequests.Where(request => request.ApprovalState == "Rejected").ToList();
-            }
-            return View(approvedRequests);
-        }
-
-        [Authorize(Roles = "admin")]
-        [HttpGet]
-        public async Task<IActionResult> Pending()
-        {
-
-            List<LeaveRequestReadAdminDTO> approvedRequests = new List<LeaveRequestReadAdminDTO>();
-
-            var response = await _leaveRequestAdminService.GetLeaveRequestAdminAsync<AppResponse>();
-
-            if (response.IsSuccess)
-            {
-                List<LeaveRequestReadAdminDTO> allRequests = JsonConvert.DeserializeObject<List<LeaveRequestReadAdminDTO>>(response.Result.ToString());
-
-                approvedRequests = allRequests.Where(request => request.ApprovalState == "Pending").ToList();
             }
             return View(approvedRequests);
         }

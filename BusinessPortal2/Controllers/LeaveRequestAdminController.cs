@@ -14,12 +14,14 @@ namespace BusinessPortal2.Controllers
     public class LeaveRequestAdminController : ControllerBase
     {
         private readonly LeaveRequestAdminRepo _leaveRequestAdminRepo;
+        private readonly ILeaveTypeRepo _leaveTypeRepo;
         private readonly IMapper _mapper;
 
-        public LeaveRequestAdminController(LeaveRequestAdminRepo leaveRequestAdminRepo, IMapper mapper)
+        public LeaveRequestAdminController(LeaveRequestAdminRepo leaveRequestAdminRepo, IMapper mapper, ILeaveTypeRepo leaveTypeRepo)
         {
             _leaveRequestAdminRepo = leaveRequestAdminRepo;
             _mapper = mapper;
+            _leaveTypeRepo = leaveTypeRepo;
         }
 
         [HttpGet("getall")]
@@ -78,7 +80,7 @@ namespace BusinessPortal2.Controllers
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
 
-            if (leaveRequestCreateDTO != null)
+            if (leaveRequestCreateDTO != null && leaveRequestCreateDTO.EndDate > leaveRequestCreateDTO.StartDate)
             {
                 await _leaveRequestAdminRepo.CreateLeaveRequest(_mapper.Map<LeaveRequest>(leaveRequestCreateDTO));
                 response.Result = leaveRequestCreateDTO;
@@ -94,6 +96,7 @@ namespace BusinessPortal2.Controllers
         public async Task<IActionResult> UpdateLeaveRequest([FromBody] LeaveRequestUpdateDTO leaveRequestUpdateDTO)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+            TimeSpan daysBetween = leaveRequestUpdateDTO.EndDate - leaveRequestUpdateDTO.StartDate;
 
             if (leaveRequestUpdateDTO != null)
             {
@@ -101,6 +104,11 @@ namespace BusinessPortal2.Controllers
                 response.Result = leaveRequestUpdateDTO;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
+
+                if(leaveRequestUpdateDTO.ApprovalState == "Approved")
+                {
+                    await _leaveTypeRepo.UpdateLeaveTypeOnApproved(daysBetween.Days, leaveRequestUpdateDTO.PersonalId);
+                }
 
                 return Ok(response);
             }
