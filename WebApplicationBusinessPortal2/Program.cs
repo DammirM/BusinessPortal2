@@ -17,7 +17,7 @@ builder.Services.AddLogging(builder => builder.AddConsole());
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 builder.Services.AddSingleton<IHttpClientService, HttpClientService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
-
+builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
 builder.Services.AddScoped<ILeaveRequestAdminService, LeaveRequestAdminService>();
 builder.Services.AddScoped<IGetSelectListService, GetSelectListService>();
 builder.Services.AddScoped<IAccessService, AccessService>();
