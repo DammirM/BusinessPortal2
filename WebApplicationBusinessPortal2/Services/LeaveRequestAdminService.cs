@@ -34,7 +34,7 @@ namespace WebApplicationBusinessPortal2.Services
             {
                 ApiType = ApiType.POST,
                 Data = leaveDTO,
-                Url = _httpClientService.Client.BaseAddress + "leavetypes/create",
+                Url = _httpClientService.Client.BaseAddress + "leavetypes/create/forall",
                 AccessToken = ""
             });
         }
@@ -49,12 +49,12 @@ namespace WebApplicationBusinessPortal2.Services
             });
         }
 
-        public async Task<T> DeleteLeaveTypeAsync<T>(int Id)
+        public async Task<T> DeleteLeaveTypeByNameAsync<T>(string name)
         {
             return await SendAsync<T>(new ApiRequest
             {
                 ApiType = ApiType.DELETE,
-                Url = _httpClientService.Client.BaseAddress + $"leavetypes/delete/{Id}",
+                Url = _httpClientService.Client.BaseAddress + $"leavetypes/deleteByName/{name}",
                 AccessToken = ""
             });
         }
@@ -105,6 +105,16 @@ namespace WebApplicationBusinessPortal2.Services
             {
                 ApiType = ApiType.GET,
                 Url = _httpClientService.Client.BaseAddress + $"leavetypes/get/{Id}",
+                AccessToken = ""
+            });
+        }
+
+        public async Task<T> GetLeaveTypeByPersonalId<T>(int Id)
+        {
+            return await SendAsync<T>(new ApiRequest
+            {
+                ApiType = ApiType.GET,
+                Url = _httpClientService.Client.BaseAddress + $"leavetypes/get/All/{Id}",
                 AccessToken = ""
             });
         }
