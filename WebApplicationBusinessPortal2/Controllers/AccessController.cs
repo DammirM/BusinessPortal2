@@ -40,10 +40,11 @@ namespace WebApplicationBusinessPortal2.Controllers
                 {
                     return RedirectToAction(nameof(Login));
                 }
-                else if (response.ErrorMessages != null && response.ErrorMessages.Count > 0)
+                else if(!response.IsSuccess && response.Errors.Count > 0)
                 {
-                    foreach (var errorMessage in response.ErrorMessages)
+                    foreach (var errorMessage in response.Errors)
                     {
+                        ModelState.Clear();
                         ModelState.AddModelError(string.Empty, errorMessage);
                     }
                 }
@@ -84,13 +85,12 @@ namespace WebApplicationBusinessPortal2.Controllers
                         return RedirectToAction("AdminIndex", "LeaveRequestAdmin");
                     }
                 }
-
-                else if (response.ErrorMessages != null && response.ErrorMessages.Count > 0)
+            }
+            else if (!response.IsSuccess && response.Errors.Count > 0)
+            {
+                foreach (var errorMessage in response.Errors)
                 {
-                    foreach (var errorMessage in response.ErrorMessages)
-                    {
-                        ModelState.AddModelError(string.Empty, errorMessage);
-                    }
+                    ModelState.AddModelError(string.Empty, errorMessage);
                 }
             }
             return View();

@@ -117,7 +117,6 @@ namespace BusinessPortal2.Controllers
 
                 return Ok(response);
             }
-
             return BadRequest(response);
         }
 

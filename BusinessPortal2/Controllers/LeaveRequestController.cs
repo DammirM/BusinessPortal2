@@ -13,13 +13,15 @@ namespace BusinessPortal2.Controllers
     [ApiController]
     public class LeaveRequestController : Controller
     {
+        private readonly ILeaveTypeRepo _typeRepo;
         private readonly ILeaveRequestRepo _leaveRequestRepo;
         private readonly IMapper _mapper;
 
-        public LeaveRequestController(ILeaveRequestRepo leaveRequestRepo, IMapper mapper)
+        public LeaveRequestController(ILeaveRequestRepo leaveRequestRepo, IMapper mapper, ILeaveTypeRepo typeRepo)
         {
             _leaveRequestRepo = leaveRequestRepo;
             _mapper = mapper;
+            _typeRepo = typeRepo;
         }
 
         [HttpGet("getall/{personalId}")]
@@ -61,10 +63,11 @@ namespace BusinessPortal2.Controllers
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
 
-            if (leaveRequestCreateDTO != null)
+            if (leaveRequestCreateDTO != null && leaveRequestCreateDTO.EndDate > leaveRequestCreateDTO.StartDate)
             {
                 leaveRequestCreateDTO.ApprovalState = "Pending";
                 await _leaveRequestRepo.CreateLeaveRequest(_mapper.Map<LeaveRequest>(leaveRequestCreateDTO));
+
                 response.Result = leaveRequestCreateDTO;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.Created;

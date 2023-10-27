@@ -146,5 +146,15 @@ namespace BusinessPortal2.Services
 
             return null;
         }
+
+        public async Task UpdateLeaveTypeOnApproved(int days, int personalId)
+        {
+            var personToUpdate = await _context.LeaveType.FirstOrDefaultAsync(person => person.PersonalId == personalId);
+            if (personToUpdate != null)
+            {
+                personToUpdate.LeaveDays -= days;
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }
