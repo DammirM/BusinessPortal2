@@ -2,6 +2,6 @@
 {
     public interface ILeaveTypeService
     {
-        Task<T> GetAllLeaveRequestByPersonId<T>(int personId);
+        Task<T> GetAllLeaveRequestByPersonId<T>(int personalId);
     }
 }

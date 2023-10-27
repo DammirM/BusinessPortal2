@@ -12,12 +12,12 @@ namespace WebApplicationBusinessPortal2.Services
             this._httpClientService = httpClientService;
         }
 
-        public async Task<T> GetAllLeaveRequestByPersonId<T>(int personId)
+        public async Task<T> GetAllLeaveRequestByPersonId<T>(int personalId)
         {
             return await SendAsync<T>(new ApiRequest
             {
                 ApiType = ApiType.GET,
-                Url = _httpClientService.Client.BaseAddress + $"get/All/{personId}",
+                Url = _httpClientService.Client.BaseAddress + $"leavetypes/get/All/{personalId}",
                 AccessToken = ""
             });
         }

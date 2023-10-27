@@ -123,14 +123,16 @@ namespace WebApplicationBusinessPortal2.Controllers
         public async Task<IActionResult> GetUserLeaveTypes()
         {
             int personalId = GetUserIdFromToken();
-            List<LeaveTypeReadDTO> personalLeaveTypes = new List<LeaveTypeReadDTO>();
             var response = await _leaveTypeService.GetAllLeaveRequestByPersonId<AppResponse>(personalId);
             
+
             if (response != null && response.IsSuccess)
             {
-                personalLeaveTypes = JsonConvert.DeserializeObject<List<LeaveTypeReadDTO>>(response.Result.ToString());
+                List<LeaveTypeReadDTO> personalLeaveTypes = JsonConvert.DeserializeObject<List<LeaveTypeReadDTO>>(response.Result.ToString());
+
+                return View(personalLeaveTypes);
             }
-            return View(personalLeaveTypes);
+            return NotFound("hej");
         }
 
         [Authorize(Roles = "user")]
