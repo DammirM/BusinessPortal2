@@ -64,7 +64,6 @@ namespace WebApplicationBusinessPortal2.Controllers
         [HttpGet]
         public async Task<IActionResult> LeaveTypeIndex()
         {
-
             List<LeaveTypeReadDTO> list = new List<LeaveTypeReadDTO>();
 
             var response = await _leaveRequestAdminService.GetLeaveTypeAsync<AppResponse>();
@@ -72,9 +71,15 @@ namespace WebApplicationBusinessPortal2.Controllers
             if (response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<LeaveTypeReadDTO>>(response.Result.ToString());
+
+                list = list.GroupBy(lt => lt.LeaveName)
+                           .Select(group => group.First())
+                           .ToList();
             }
+
             return View(list);
         }
+
 
         [Authorize(Roles = "admin")]
         [HttpGet]
@@ -137,9 +142,12 @@ namespace WebApplicationBusinessPortal2.Controllers
             List<SelectListItem> leaveTypeSelectList = new List<SelectListItem>();
             List<LeaveTypeSimpleReadDTO> leaveTypes = new List<LeaveTypeSimpleReadDTO>();
             var response = await _getSelectListService.GetSelectListAsync<AppResponse>("leavetypes/getall");
+
             if (response.IsSuccess)
             {
                 leaveTypes = JsonConvert.DeserializeObject<List<LeaveTypeSimpleReadDTO>>(response.Result.ToString());
+
+                leaveTypes = leaveTypes.GroupBy(x => x.LeaveName).Select(group => group.First()).ToList();
 
                 foreach (var leaveType in leaveTypes)
                 {
@@ -179,10 +187,11 @@ namespace WebApplicationBusinessPortal2.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> DeleteLeave(int Id)
+        public async Task<IActionResult> DeleteLeave(string name)
         {
 
-            var response = await _leaveRequestAdminService.DeleteLeaveTypeAsync<AppResponse>(Id);
+            var response = await _leaveRequestAdminService.DeleteLeaveTypeByNameAsync<AppResponse>(name);
+
 
             return RedirectToAction(nameof(LeaveTypeIndex));
 
@@ -240,7 +249,6 @@ namespace WebApplicationBusinessPortal2.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateLeave(int Id)
         {
-
             var response = await _leaveRequestAdminService.GetLeaveTypeByIdtAdminAsync<AppResponse>(Id);
 
             if (response != null && response.IsSuccess)
@@ -259,16 +267,22 @@ namespace WebApplicationBusinessPortal2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _leaveRequestAdminService.UpdateLeaveTypeAdminAsync<AppResponse>(leaveDTO);
+                var updateResponse = await _leaveRequestAdminService.UpdateLeaveTypeAdminAsync<AppResponse>(leaveDTO);
 
-                if (response != null && response.IsSuccess)
+                if (updateResponse != null && updateResponse.IsSuccess)
                 {
-                    return RedirectToAction(nameof(LeaveTypeIndex));
+                    return RedirectToAction("InfoPersonal", new { Id = leaveDTO.PersonalId });
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Failed to update leave information. Please try again.");
                 }
             }
 
+            // ModelState is not valid or update failed, redisplay the form with validation errors.
             return View(leaveDTO);
         }
+
 
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateLeave()
@@ -290,6 +304,8 @@ namespace WebApplicationBusinessPortal2.Controllers
             }
             return View(leaveDTO);
         }
+        
+
 
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeletePersonal(int Id)
@@ -332,6 +348,23 @@ namespace WebApplicationBusinessPortal2.Controllers
                 }
             }
             return View(PersonalDTO);
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet]
+        public async Task<IActionResult> InfoPersonal(int Id)
+        {
+
+            var response = await _leaveRequestAdminService.GetLeaveTypeByPersonalId<AppResponse>(Id);
+
+            if (response != null && response.IsSuccess)
+            {
+                List<LeaveTypeReadDTO> model = JsonConvert.DeserializeObject<List<LeaveTypeReadDTO>>(Convert.ToString(response.Result));
+
+                return View(model);
+            }
+
+            return NotFound();
         }
 
         [Authorize(Roles = "admin")]

@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "UpdateLeave";
+    var LeaveName = Convert.ToInt32(Context.Request.Query["LeaveName"]);
+    var personalId = Convert.ToInt32(Context.Request.Query["personalId"]);
 }
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -37,19 +39,24 @@
         <form asp-action="UpdateLeave">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" disabled class="form-control" />
+                <label asp-for="Id" class="control-label" readonly></label>
+                <input asp-for="Id" class="form-control" readonly />
                 <span asp-validation-for="Id" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LeaveName" class="control-label"></label>
-                <input asp-for="LeaveName" class="form-control" />
+                <label asp-for="LeaveName" class="control-label"readonly></label>
+                <input asp-for="LeaveName" class="form-control" readonly />
                 <span asp-validation-for="LeaveName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LeaveDays" class="control-label"></label>
-                <input asp-for="LeaveDays" class="form-control" />
+                <input asp-for="LeaveDays" class="form-control"  />
                 <span asp-validation-for="LeaveDays" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PersonalId" class="control-label" readonly></label>
+                <input asp-for="PersonalId" class="form-control" readonly />
+                <span asp-validation-for="PersonalId" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
@@ -60,7 +67,7 @@
 </div>
 
 <div>
-    <a asp-action="LeaveTypeIndex">Back to List</a>
+    <a asp-action="PersonalIndex">Back to List</a>
 </div>
 
 @section Scripts {

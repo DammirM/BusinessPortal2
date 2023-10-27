@@ -64,6 +64,7 @@
                 @Html.DisplayFor(modelItem => item.isAdmin)
             </td>
                 <td>
+                    <a asp-action="InfoPersonal" asp-route-id="@item.Id" class="btn btn-success" style="color: white;"><i class="fas fa-info-circle"></i> Info</a>
                     <a asp-action="UpdatePersonal" asp-route-id="@item.Id" class="btn btn-warning" style="color: white;"><i class="fa-solid fa-pen-to-square"></i> Update</a>
                     <a asp-action="DeletePersonal" asp-route-id="@item.Id" class="btn btn-danger" style="color: white;"><i class="fa-solid fa-trash"></i> Delete</a>
                 </td>
