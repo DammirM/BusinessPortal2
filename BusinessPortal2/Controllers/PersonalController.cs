@@ -156,7 +156,7 @@ namespace BusinessPortal2.Controllers
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdatePersonal([FromBody] PersonalUpdateDTO p_Update_DTO, [FromServices] IMapper _mapper,
-    [FromServices] IValidator<PersonalUpdateDTO> _validate)
+        [FromServices] IValidator<PersonalUpdateDTO> _validate)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.NotFound };
 
