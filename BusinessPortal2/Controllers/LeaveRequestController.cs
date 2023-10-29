@@ -62,17 +62,22 @@ namespace BusinessPortal2.Controllers
         public async Task<IActionResult> CreateLeaveRequest([FromBody] LeaveRequestCreateDTO leaveRequestCreateDTO)
         {
             ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+            TimeSpan daysBetween = leaveRequestCreateDTO.EndDate - leaveRequestCreateDTO.StartDate;
+            var leaveTypesForPerson = await _typeRepo.GetLeaveTypeById(leaveRequestCreateDTO.LeaveTypeId);
 
             if (leaveRequestCreateDTO != null && leaveRequestCreateDTO.EndDate > leaveRequestCreateDTO.StartDate)
             {
-                leaveRequestCreateDTO.ApprovalState = "Pending";
-                await _leaveRequestRepo.CreateLeaveRequest(_mapper.Map<LeaveRequest>(leaveRequestCreateDTO));
+                if(leaveTypesForPerson.LeaveDays >= daysBetween.Days)
+                {
+                    leaveRequestCreateDTO.ApprovalState = "Pending";
+                    await _leaveRequestRepo.CreateLeaveRequest(_mapper.Map<LeaveRequest>(leaveRequestCreateDTO));
 
-                response.Result = leaveRequestCreateDTO;
-                response.isSuccess = true;
-                response.StatusCode = System.Net.HttpStatusCode.Created;
+                    response.Result = leaveRequestCreateDTO;
+                    response.isSuccess = true;
+                    response.StatusCode = System.Net.HttpStatusCode.Created;
 
-                return Created("Created", response);
+                    return Created("Created", response);
+                }
             }
             return BadRequest(response);
         }
