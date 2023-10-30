@@ -120,24 +120,30 @@ namespace BusinessPortal2.Services
 
         public async Task<LeaveType> CreateLeaveTypeForAll(LeaveType leaveType)
         {
-
             var personal = await _context.personals.ToListAsync();
 
             if (leaveType != null && personal.Any())
             {
+                // Check if a LeaveType with the same name already exists
+                var leaveTypeExists = await _context.LeaveType
+                    .AnyAsync(lt => lt.LeaveName.ToLower() == leaveType.LeaveName.ToLower());
+
+                if (leaveTypeExists)
+                {
+                    // A LeaveType with the same name already exists, so return null
+                    return null;
+                }
 
                 foreach (var pers in personal)
                 {
-
                     var leave = new LeaveType()
                     {
-                        LeaveName = leaveType.LeaveName,
+                        LeaveName = leaveType.LeaveName.ToLower(),  // Convert to lowercase
                         LeaveDays = leaveType.LeaveDays,
                         PersonalId = pers.Id,
                     };
 
                     _context.LeaveType.Add(leave);
-                    
                 }
 
                 await _context.SaveChangesAsync();
@@ -146,6 +152,7 @@ namespace BusinessPortal2.Services
 
             return null;
         }
+
 
         public async Task UpdateLeaveTypeOnApproved(int days, int personalId)
         {
