@@ -39,11 +39,17 @@
         </tr>
     </thead>
     <tbody>
+        @{
+            var counter = 1;
+        }
         @foreach (var item in Model)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
+                    @counter
+                    @{
+                        counter++;
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.LeaveName)

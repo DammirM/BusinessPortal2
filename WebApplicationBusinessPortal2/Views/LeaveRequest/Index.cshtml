@@ -56,11 +56,15 @@
         </tr>
     </thead>
     <tbody>
+        @{var counter = 1; }
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
+                <td>
+                    @counter
+                    @{
+                        counter++;
+                    }
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.leaveType.LeaveName)
             </td>
@@ -76,9 +80,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ApprovalState)
             </td>
-            <td>
-                    <a asp-action="Delete" asp-route-leaveRequestId="@item.Id" style="color: white;" class="btn btn-danger"><i class="fa-solid fa-trash"></i> Delete</a>
-            </td>
+                @if(item.ApprovalState == "Pending")
+                {
+                    <td>
+                        <a asp-action="Delete" asp-route-leaveRequestId="@item.Id" style="color: white;" class="btn-sm btn-danger"><i class="fa-solid fa-trash"></i> </a>
+                    </td>
+                }
+                @if(item.ApprovalState != "Pending")
+                {
+                    <td>
+                        <a  style="color: white;" class="btn-sm"></a>
+                    </td>
+                }
         </tr>
 }
     </tbody>
