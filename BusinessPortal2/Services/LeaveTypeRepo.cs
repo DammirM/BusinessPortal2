@@ -124,13 +124,11 @@ namespace BusinessPortal2.Services
 
             if (leaveType != null && personal.Any())
             {
-                // Check if a LeaveType with the same name already exists
                 var leaveTypeExists = await _context.LeaveType
                     .AnyAsync(lt => lt.LeaveName.ToLower() == leaveType.LeaveName.ToLower());
 
                 if (leaveTypeExists)
                 {
-                    // A LeaveType with the same name already exists, so return null
                     return null;
                 }
 
@@ -138,7 +136,7 @@ namespace BusinessPortal2.Services
                 {
                     var leave = new LeaveType()
                     {
-                        LeaveName = leaveType.LeaveName.ToLower(),  // Convert to lowercase
+                        LeaveName = leaveType.LeaveName.ToLower(),
                         LeaveDays = leaveType.LeaveDays,
                         PersonalId = pers.Id,
                     };
