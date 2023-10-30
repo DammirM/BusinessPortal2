@@ -32,7 +32,7 @@ namespace BusinessPortal2.Controllers
             var allLeaveRequests = await _leaveRequestRepo.GetAllLeaveRequest(personalId);
             if(allLeaveRequests.Any())
             {
-                response.Result = _mapper.Map<IEnumerable<LeaveRequestReadDTO>>(allLeaveRequests);
+                response.Result = _mapper.Map<IEnumerable<LeaveRequestReadDTO>>(allLeaveRequests).OrderByDescending(leaveId => leaveId.Id); ;
                 response.isSuccess = true;
                 response.StatusCode = System.Net.HttpStatusCode.OK;
 

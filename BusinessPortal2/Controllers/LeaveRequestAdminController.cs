@@ -5,6 +5,10 @@ using BusinessPortal2.Services;
 using Microsoft.AspNetCore.Mvc;
 using BusinessPortal2.Models;
 using Microsoft.AspNetCore.ResponseCompression;
+using MimeKit;
+using MimeKit.Text;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 
 namespace BusinessPortal2.Controllers
 {
@@ -15,13 +19,15 @@ namespace BusinessPortal2.Controllers
     {
         private readonly LeaveRequestAdminRepo _leaveRequestAdminRepo;
         private readonly ILeaveTypeRepo _leaveTypeRepo;
+        private readonly IPersonalRepo _personalRepo;
         private readonly IMapper _mapper;
 
-        public LeaveRequestAdminController(LeaveRequestAdminRepo leaveRequestAdminRepo, IMapper mapper, ILeaveTypeRepo leaveTypeRepo)
+        public LeaveRequestAdminController(LeaveRequestAdminRepo leaveRequestAdminRepo, IMapper mapper, ILeaveTypeRepo leaveTypeRepo, IPersonalRepo personalRepo)
         {
             _leaveRequestAdminRepo = leaveRequestAdminRepo;
             _mapper = mapper;
             _leaveTypeRepo = leaveTypeRepo;
+            _personalRepo = personalRepo;
         }
 
         [HttpGet("getall")]
@@ -114,6 +120,11 @@ namespace BusinessPortal2.Controllers
                 {
                     await _leaveTypeRepo.UpdateLeaveTypeOnApproved(daysBetween.Days, leaveRequestUpdateDTO.PersonalId);
                 }
+                if(leaveRequestUpdateDTO.ApprovalState == "Approved" || leaveRequestUpdateDTO.ApprovalState == "Rejected")
+                {
+                    var person = await _personalRepo.GetPersonalById(leaveRequestUpdateDTO.PersonalId);
+                    SendEmail(person, leaveRequestUpdateDTO.ApprovalState);
+                }
 
                 return Ok(response);
             }
@@ -136,6 +147,48 @@ namespace BusinessPortal2.Controllers
             }
 
             return BadRequest("Not Found");
+        }
+
+        [HttpPost("SendEmail")]
+        public IActionResult SendEmail(Personal user, string state)
+        {
+            var email = new MimeMessage();
+
+            if (state == "Approved")
+            {
+                email.From.Add(MailboxAddress.Parse("a06029944@gmail.com"));
+                email.To.Add(MailboxAddress.Parse(user.Email));
+                email.Subject = "Your Request has been Approved!";
+                email.Body = new TextPart(TextFormat.Text)
+                {
+                    Text = $"Hello {user.FullName}!\r\n\r\nWe're thrilled to inform you that your leave request has been approved. We wish you a good time away.\r\n\r\nBest regards,\r\nBusinessPortal"
+                };
+            }
+            else if (state == "Rejected")
+            {
+                email.From.Add(MailboxAddress.Parse("a06029944@gmail.com"));
+                email.To.Add(MailboxAddress.Parse(user.Email));
+                email.Subject = "Regarding Your Request";
+                email.Body = new TextPart(TextFormat.Text)
+                {
+                    Text = $"Hello {user.FullName}!\r\n\r\nWe regret to inform you that your recent leave request has been declined. We understand this may be disappointing, and we're here to help answer any questions or provide guidance on how to adjust your request within the allowable time frame.\r\n\r\nThank you for your understanding.\r\n\r\nBest regards,\r\nBusinessPortal"
+                };
+            }
+
+            try
+            {
+                using var smtp = new SmtpClient();
+                smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                smtp.Authenticate("a06029944@gmail.com", "isjd ksdd zmwb xtuu");
+                smtp.Send(email);
+                smtp.Disconnect(true);
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
     }
 }

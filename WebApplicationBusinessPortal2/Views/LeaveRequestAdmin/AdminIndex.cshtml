@@ -35,16 +35,16 @@
 <p>
     <a asp-action="Create" class="btn btn-primary">Create Request</a>
 </p>
-
-<p>
-    <a asp-action="Approved">Approved Requests</a>            
-    <a asp-action="Rejected">Rejected Requests</a>             
-</p>
-<div class="row">
-    <div class="col-md-12">
-        <p>Total Requests: @Model.Count()</p>
-    </div>
-</div>
+<ul class="list-group list-group-horizontal">
+    <li class="list-group-item">Total Requests: <b>@Model.Count()</b></li>
+    <li class="list-group-item"><a asp-action="Rejected" class="btn btn-link" data-mdb-ripple-color="dark"><b>Rejected Requests</b></a></li>
+    <li class="list-group-item"> <a asp-action="Approved" class="btn btn-link" data-mdb-ripple-color="dark"><b>Approved Requests</b></a></li>
+</ul>
+<br />
+@* <p>
+    <a asp-action="Approved" class="btn btn-link" data-mdb-ripple-color="dark">Approved Requests</a>
+    <a asp-action="Rejected" class="btn btn-link" data-mdb-ripple-color="dark">Rejected Requests</a>
+</p> *@
 <table class="table">
     <thead>
         <tr>
@@ -100,8 +100,8 @@
                     @Html.DisplayFor(modelItem => item.ApprovalState)
                 </td>
                 <td>
-                    <a asp-action="Update" class="btn btn-warning" style="color: white;" asp-route-id="@item.Id" asp-route-personalId="@item.personal.Id" asp-route-leaveTypeId="@item.leaveType.Id"><i class="fa-solid fa-pen-to-square"></i> Update</a>
-                    <a asp-action="Delete" class="btn btn-danger" style="color: white;" asp-route-id="@item.Id"><i class="fa-solid fa-trash"></i> Delete</a>
+                    <a asp-action="Update" class="btn-sm btn-warning text-decoration-none" style="color: white;" asp-route-id="@item.Id" asp-route-personalId="@item.personal.Id" asp-route-leaveTypeId="@item.leaveType.Id"><i class="fa-solid fa-pen-to-square"></i> Update</a>
+                    <a asp-action="Delete" class="btn-sm btn-danger text-decoration-none" style="color: white;" asp-route-id="@item.Id"><i class="fa-solid fa-trash"></i> Delete</a>
             </td>
         </tr>
 }
