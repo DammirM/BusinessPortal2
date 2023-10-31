@@ -412,14 +412,16 @@ namespace WebApplicationBusinessPortal2.Controllers
                         fileContentBuilder.AppendLine($"Id: {item.Id}, LeaveType: {item.leaveType.LeaveName}, StartDate: {item.StartDate}, EndDate: {item.EndDate}, DateRequested: {item.DateRequest}, State: {item.ApprovalState}");
                     }
 
+
                     string fileContent = fileContentBuilder.ToString();
 
                     byte[] fileBytes = Encoding.UTF8.GetBytes(fileContent);
 
                     return File(fileBytes, "text/plain", "LeaveRequestData.txt");
                 }
+
             }
-                return RedirectToAction("ExportData");
+            return RedirectToAction("AdminIndex");
         }
 
     }
