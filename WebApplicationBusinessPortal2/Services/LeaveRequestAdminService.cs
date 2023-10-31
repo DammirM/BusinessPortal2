@@ -198,7 +198,7 @@ namespace WebApplicationBusinessPortal2.Services
             return await SendAsync<T>(new ApiRequest
             {
                 ApiType = ApiType.POST,
-                Url = _httpClientService.Client.BaseAddress + $"export/data/{start}/{end}",
+                Url = _httpClientService.Client.BaseAddress + $"admin/leaverequest/export/data/{start}/{end}",
                 AccessToken = ""
             });
         }

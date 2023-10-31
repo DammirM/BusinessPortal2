@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using WebApplicationBusinessPortal2.Models;
 using WebApplicationBusinessPortal2.Services;
 
@@ -397,14 +398,30 @@ namespace WebApplicationBusinessPortal2.Controllers
         public async Task<IActionResult> ExportData(DateTime start, DateTime end)
         {
             var result = await _leaveRequestAdminService.ExportDataAdminAsync<AppResponse>(start, end);
+
             if (result != null)
             {
                 List<LeaveRequestReadDTO> model = JsonConvert.DeserializeObject<List<LeaveRequestReadDTO>>(Convert.ToString(result.Result));
 
-                return View(model);
+                if(model != null)
+                {
+                    StringBuilder fileContentBuilder = new StringBuilder();
+
+                    foreach (var item in model)
+                    {
+                        fileContentBuilder.AppendLine($"Id: {item.Id}, LeaveType: {item.leaveType.LeaveName}, StartDate: {item.StartDate}, EndDate: {item.EndDate}, DateRequested: {item.DateRequest}, State: {item.ApprovalState}");
+                    }
+
+                    string fileContent = fileContentBuilder.ToString();
+
+                    byte[] fileBytes = Encoding.UTF8.GetBytes(fileContent);
+
+                    return File(fileBytes, "text/plain", "LeaveRequestData.txt");
+                }
             }
-            return RedirectToAction("ExportData");
+                return RedirectToAction("ExportData");
         }
+
     }
     
 }
