@@ -36,8 +36,8 @@ namespace BusinessPortal2
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<PersonaldataContext>(options => options
-            //.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionFilip")));
-            .UseSqlServer(builder.Configuration.GetConnectionString("Connectiontest")));
+            .UseSqlServer(builder.Configuration.GetConnectionString("ConnectFilip")));
+            //.UseSqlServer(builder.Configuration.GetConnectionString("Connectiontest")));
             //.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionMaxLaptop")));
 
             var app = builder.Build();
