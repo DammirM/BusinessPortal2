@@ -16,12 +16,14 @@ namespace BusinessPortal2.Controllers
     public class LeaveTypeController : ControllerBase
     {
         private readonly ILeaveTypeRepo _leaveTypeRepository;
+        private readonly LeaveRequestAdminRepo _leaveRequestRepo;
         private readonly IMapper _mapper;
 
-        public LeaveTypeController(ILeaveTypeRepo leaveTypeRepository, IMapper mapper)
+        public LeaveTypeController(ILeaveTypeRepo leaveTypeRepository, IMapper mapper, LeaveRequestAdminRepo leaveRequestRepo)
         {
             _leaveTypeRepository = leaveTypeRepository;
             _mapper = mapper;
+            _leaveRequestRepo = leaveRequestRepo;
         }
 
         [HttpGet("getall")]
@@ -175,6 +177,52 @@ namespace BusinessPortal2.Controllers
             }
             response.Errors.Add($"LeaveName [{name}] could not be found");
             return NotFound(response);
+        }
+
+        [HttpGet("total/leavetime/hours")]
+        public async Task<IActionResult> GetTotalUsedLeaveTime()
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+            List<LeaveTypeTotalTime> leaveDays = new List<LeaveTypeTotalTime>();   
+            List<string> leaveNameFind = new List<string>();
+            int daysCount = 0;
+            var leaveType = await _leaveRequestRepo.GetAll();
+            if (leaveType.Any())
+            {
+                var leaves = leaveType.Where(status => status.ApprovalState == "Approved");
+                if(leaves.Any())
+                {
+                    var uniqueLeaveNames = leaves.Select(l => l.leaveType.LeaveName.ToLower()).Distinct();
+                    foreach (var uniqueName in uniqueLeaveNames)
+                    {
+                        var leaveName = uniqueName; 
+                        foreach (var item in leaves.Where(l => l.leaveType.LeaveName.ToLower() == leaveName))
+                        {
+                            TimeSpan totalDays = item.EndDate - item.StartDate;
+                            daysCount += totalDays.Days;
+                        }
+                        LeaveTypeTotalTime days = new LeaveTypeTotalTime
+                        {
+                            Name = leaveName,
+                            Days = daysCount         
+                        };
+                        leaveDays.Add(days);
+                        daysCount = 0;
+                    }
+                }
+            }
+            if (leaveDays.Any())
+            {
+                response.isSuccess = true;
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Result = leaveDays;
+                return Ok(response);
+            }
+            else
+            {
+                response.Errors.Add("Not able to get all the LeaveTypes total time data!");
+                return BadRequest(response);
+            }
         }
     }
 }

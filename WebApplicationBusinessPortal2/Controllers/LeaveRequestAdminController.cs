@@ -19,7 +19,6 @@ namespace WebApplicationBusinessPortal2.Controllers
         private readonly IHttpClientService httpClientService;
         private readonly ILeaveRequestAdminService _leaveRequestAdminService;
         private readonly IGetSelectListService _getSelectListService;
-
         public LeaveRequestAdminController(IGetSelectListService getSelectListService, IHttpClientService httpClientService, ILeaveRequestAdminService leaveRequestAdminService)
         {
             this.httpClientService = httpClientService;
@@ -367,6 +366,23 @@ namespace WebApplicationBusinessPortal2.Controllers
                 }
             }
             return 0;
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet]
+        public async Task<IActionResult> GetLeaveTypeTotalTime()
+        {
+            var allLeaves = await _leaveRequestAdminService.GetTotalDaysApprovedFromAllLeaveTypes<AppResponse>();
+
+            if (allLeaves != null && allLeaves.Result != null)
+            {
+                List<LeaveTypeTotalTime> model = JsonConvert.DeserializeObject<List<LeaveTypeTotalTime>>(Convert.ToString(allLeaves.Result));
+                return View(model);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }
