@@ -384,5 +384,27 @@ namespace WebApplicationBusinessPortal2.Controllers
                 return BadRequest();
             }
         }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet]
+        public async Task<IActionResult> ExportData()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<IActionResult> ExportData(DateTime start, DateTime end)
+        {
+            var result = await _leaveRequestAdminService.ExportDataAdminAsync<AppResponse>(start, end);
+            if (result != null)
+            {
+                List<LeaveRequestReadDTO> model = JsonConvert.DeserializeObject<List<LeaveRequestReadDTO>>(Convert.ToString(result.Result));
+
+                return View(model);
+            }
+            return RedirectToAction("ExportData");
+        }
     }
+    
 }

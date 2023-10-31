@@ -190,5 +190,41 @@ namespace BusinessPortal2.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost("export/data/{start}/{end}")]
+        public async Task<IActionResult> ExportData(DateTime start, DateTime end)
+        {
+            ApiResponse response = new ApiResponse() { isSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest }; ;
+            List<LeaveRequest> leaves = new List<LeaveRequest>();
+            var leaveRequest = await _leaveRequestAdminRepo.GetAll();
+            var approvedRequests = leaveRequest.Where(status => status.ApprovalState == "Approved");
+
+            if(approvedRequests.Any())
+            {
+                var leaveRequestsInTimeframe = approvedRequests.Where(request =>
+                {
+                    return request.EndDate >= start && request.StartDate <= end;
+                });
+
+                if(leaveRequestsInTimeframe.Any())
+                {
+                    foreach (var item in leaveRequestsInTimeframe)
+                    {
+                        leaves.Add(item);
+                    }
+                    response.isSuccess = true;
+                    response.StatusCode = System.Net.HttpStatusCode.OK;
+                    response.Result = _mapper.Map<IEnumerable<LeaveRequestReadDTO>>(leaves);
+                    return Ok(response);
+                }
+                response.Errors.Add("No Appoved request with that timeframe found!");
+                return BadRequest(response);
+            }
+            else
+            {
+                response.Errors.Add("No Appoved request with that timeframe found!");
+                return BadRequest(response);
+            }
+        }
     }
 }

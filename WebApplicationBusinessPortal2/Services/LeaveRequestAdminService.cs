@@ -192,5 +192,15 @@ namespace WebApplicationBusinessPortal2.Services
                 AccessToken = ""
             });
         }
+
+        public async Task<T> ExportDataAdminAsync<T>(DateTime start, DateTime end)
+        {
+            return await SendAsync<T>(new ApiRequest
+            {
+                ApiType = ApiType.POST,
+                Url = _httpClientService.Client.BaseAddress + $"export/data/{start}/{end}",
+                AccessToken = ""
+            });
+        }
     }
 }
