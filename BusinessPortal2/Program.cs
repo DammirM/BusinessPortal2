@@ -21,6 +21,7 @@ namespace BusinessPortal2
 
             builder.Services.AddControllers();
 
+            
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IPersonalRepo, PersonalRepo>();
@@ -36,10 +37,9 @@ namespace BusinessPortal2
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<PersonaldataContext>(options => options
-            .UseSqlServer(builder.Configuration.GetConnectionString("ConnectFilip")));
-            //.UseSqlServer(builder.Configuration.GetConnectionString("Connectiontest")));
+            //.UseSqlServer(builder.Configuration.GetConnectionString("ConnectFilip")));
+            .UseSqlServer(builder.Configuration.GetConnectionString("Connectiontest")));
             //.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionMaxLaptop")));
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
