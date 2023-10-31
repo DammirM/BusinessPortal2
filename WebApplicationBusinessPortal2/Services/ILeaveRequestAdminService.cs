@@ -13,6 +13,7 @@ namespace WebApplicationBusinessPortal2.Services
         Task<T> CreateLeaveRequestAdminAsync<T>(LeaveRequestCreateDTO leaveRequest);
         Task<T> UpdateLeaveRequesAdminAsync<T>(LeaveRequestUpdateDTO leaveRequest);
         Task<T> DeleteLeaveRequestAdminAsync<T>(int Id);
+        Task<T> ExportDataAdminAsync<T>(DateTime start, DateTime end);
 
         // LeaveType
 
