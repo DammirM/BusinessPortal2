@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
-using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Services;
 using Microsoft.AspNetCore.Mvc;
 using BusinessPortal2.Models;

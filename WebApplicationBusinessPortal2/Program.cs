@@ -1,6 +1,9 @@
+using BusinessPortal2.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Configuration;
 using System.Text;
 using WebApplicationBusinessPortal2.Models.ConfigurationModels;
 using WebApplicationBusinessPortal2.Services;
@@ -56,6 +59,7 @@ builder.Services.AddAuthentication(options =>
         }
     };
 });
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
 
 var app = builder.Build();
 

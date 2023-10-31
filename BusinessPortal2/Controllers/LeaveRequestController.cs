@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BusinessPortal2.Models;
 using BusinessPortal2.Models.DTO.LeaveRequestDTO;
-using BusinessPortal2.Models.DTO.LeaveRequestDTO;
 using BusinessPortal2.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
