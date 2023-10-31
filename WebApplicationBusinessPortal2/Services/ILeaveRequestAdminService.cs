@@ -7,6 +7,7 @@ namespace WebApplicationBusinessPortal2.Services
 {
     public interface ILeaveRequestAdminService
     {
+        // LeaveRequest
         Task<T> GetLeaveRequestAdminAsync<T>();
         Task<T> GetPersonalLeaveRequestAdminAsync<T>(int Id);
         Task<T> GetLeaveRequestByIdAdminAsync<T>(int Id); 
@@ -15,7 +16,7 @@ namespace WebApplicationBusinessPortal2.Services
         Task<T> DeleteLeaveRequestAdminAsync<T>(int Id);
         Task<T> ExportDataAdminAsync<T>(DateTime start, DateTime end);
 
-        // LeaveType
+        // LeaveType 
 
         Task<T> GetLeaveTypeAsync<T>();
 
