@@ -81,6 +81,10 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ApprovalState)
             </td>
+                <td>
+                    <a asp-action="Update" class="btn-sm btn-warning text-decoration-none" style="color: white;" asp-route-id="@item.Id" asp-route-personalId="@item.personal.Id" asp-route-leaveTypeId="@item.leaveType.Id"><i class="fa-solid fa-pen-to-square"></i> Update</a>
+                    <a asp-action="Delete" class="btn-sm btn-danger text-decoration-none" style="color: white;" asp-route-id="@item.Id"><i class="fa-solid fa-trash"></i> Delete</a>
+                </td>
         </tr>
 }
         <div>

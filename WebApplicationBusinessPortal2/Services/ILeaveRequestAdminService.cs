@@ -25,6 +25,7 @@ namespace WebApplicationBusinessPortal2.Services
         Task<T> CreateLeveType<T>(LeaveTypeCreateDTO leaveDTO);
 
         Task<T> DeleteLeaveTypeByNameAsync<T>(string name);
+        Task<T> GetTotalDaysApprovedFromAllLeaveTypes<T>();
 
         // Personal
 

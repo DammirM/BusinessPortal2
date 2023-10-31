@@ -32,14 +32,20 @@
 <h1>Home Admin</h1>
 <br />
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create Request</a>
-</p>
-<ul class="list-group list-group-horizontal">
-    <li class="list-group-item">Total Requests: <b>@Model.Count()</b></li>
-    <li class="list-group-item"><a asp-action="Rejected" class="btn btn-link" data-mdb-ripple-color="dark"><b>Rejected Requests</b></a></li>
-    <li class="list-group-item"> <a asp-action="Approved" class="btn btn-link" data-mdb-ripple-color="dark"><b>Approved Requests</b></a></li>
-</ul>
+<div class="row">
+    <div class="col">
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item">Total Requests: <b>@Model.Count()</b></li>
+            <li class="list-group-item"><a asp-action="Rejected" class="btn btn-link" data-mdb-ripple-color="dark"><b>Rejected Requests</b></a></li>
+            <li class="list-group-item"><a asp-action="Approved" class="btn btn-link" data-mdb-ripple-color="dark"><b>Approved Requests</b></a></li>
+        </ul>
+    </div>
+    <div class="col">
+        <a asp-action="Create" class="btn btn-primary">Create Request</a>
+    </div>
+</div>
+<br />
+<br />
 <br />
 @* <p>
     <a asp-action="Approved" class="btn btn-link" data-mdb-ripple-color="dark">Approved Requests</a>

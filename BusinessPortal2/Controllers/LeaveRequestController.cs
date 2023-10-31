@@ -64,9 +64,9 @@ namespace BusinessPortal2.Controllers
             TimeSpan daysBetween = leaveRequestCreateDTO.EndDate - leaveRequestCreateDTO.StartDate;
             var leaveTypesForPerson = await _typeRepo.GetLeaveTypeById(leaveRequestCreateDTO.LeaveTypeId);
 
-            if (leaveRequestCreateDTO != null && leaveRequestCreateDTO.EndDate > leaveRequestCreateDTO.StartDate)
+            if (leaveRequestCreateDTO != null && leaveRequestCreateDTO.EndDate > leaveRequestCreateDTO.StartDate && daysBetween.Days >= 0)
             {
-                if(leaveTypesForPerson.LeaveDays >= daysBetween.Days)
+                if (leaveTypesForPerson.LeaveDays >= daysBetween.Days)
                 {
                     leaveRequestCreateDTO.ApprovalState = "Pending";
                     await _leaveRequestRepo.CreateLeaveRequest(_mapper.Map<LeaveRequest>(leaveRequestCreateDTO));

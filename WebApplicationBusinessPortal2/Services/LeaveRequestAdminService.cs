@@ -149,6 +149,15 @@ namespace WebApplicationBusinessPortal2.Services
             });
         }
 
+        public async Task<T> GetTotalDaysApprovedFromAllLeaveTypes<T>()
+        {
+            return await SendAsync<T>(new ApiRequest
+            {
+                ApiType = ApiType.GET,
+                Url = _httpClientService.Client.BaseAddress + "leavetypes/total/leavetime/hours",
+                AccessToken = ""
+            });
+        }
 
         public async Task<T> UpdateLeaveRequesAdminAsync<T>(LeaveRequestUpdateDTO leaveRequest)
         {
